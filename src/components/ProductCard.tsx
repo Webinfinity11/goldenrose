@@ -22,7 +22,7 @@ export function ProductCard({ p, priority }: { p: Card; priority?: boolean }) {
     max: unit.stockQty ?? undefined,
     ...(v && { variantId: v.id, variant: v.name }),
   };
-  const href = productUrl(p.slug);
+  const href = p.variantCard && v ? `${productUrl(p.slug)}?color=${v.id}` : productUrl(p.slug);
   return (
     <article className="product-card">
       <div className="product-image">
@@ -41,7 +41,7 @@ export function ProductCard({ p, priority }: { p: Card; priority?: boolean }) {
         <Link className="product-name" href={href}>
           {p.name}
         </Link>
-        {p.variantCount > 1 && <span className="product-colors">{p.variantCount} colors</span>}
+        {p.variantCount > 1 && !p.variantCard && <span className="product-colors">{p.variantCount} colors</span>}
         <div className="product-bottom">
           <div className="prices">
             {off > 0 && <span className="old-price">{gel(unit.price)}</span>}

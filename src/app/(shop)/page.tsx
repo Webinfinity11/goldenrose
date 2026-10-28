@@ -5,7 +5,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { Carousel } from "@/components/gr/Carousel";
 import { GrIcon } from "@/components/gr/GrIcon";
 import { FoundationFinder } from "@/components/home/FoundationFinder";
-import { getCategory, getProducts, type ProductCard as Card } from "@/lib/data";
+import { expandVariants, getCategory, getProducts, type ProductCard as Card } from "@/lib/data";
 import { getContent } from "@/lib/content";
 import { categoryUrl } from "@/lib/format";
 
@@ -126,6 +126,10 @@ export default async function HomePage() {
     getCategory("foundation"),
   ]);
   const foundations = foundation ? (await getProducts({ categoryIds: foundation.descendantIds })).items : [];
+  // The carousels show every color as its own card, like the original site.
+  const [nailCards, newCards, lipCards, browCards, eyeCards] = await Promise.all(
+    [nails, newest, lipButter, brows, eyeGlaze].map((r) => expandVariants(r.items)),
+  );
 
   const socials = [
     [site.instagram, "Instagram", "tr_img_1_1.svg"],
@@ -157,7 +161,7 @@ export default async function HomePage() {
         ]}
       />
       <div className="container standard-products">
-        <Products title={home.nailTitle} items={nails.items} columns={5} />
+        <Products title={home.nailTitle} items={nailCards} columns={5} />
       </div>
       <Grid
         cols="two"
@@ -208,7 +212,7 @@ export default async function HomePage() {
         ]}
       />
       <div className="container new-products">
-        <Products title={home.newTitle} items={newest.items} columns={4} />
+        <Products title={home.newTitle} items={newCards} columns={4} />
       </div>
       <section className="container feature-grid">
         <div className="feature-image">
@@ -218,7 +222,7 @@ export default async function HomePage() {
           />
         </div>
         <div className="feature-products">
-          <Products title={home.lipTitle} items={lipButter.items} columns={3} />
+          <Products title={home.lipTitle} items={lipCards} columns={3} />
         </div>
       </section>
       <section className="container feature-grid">
@@ -229,7 +233,7 @@ export default async function HomePage() {
           />
         </div>
         <div className="feature-products">
-          <Products title={home.browTitle} items={brows.items} columns={3} />
+          <Products title={home.browTitle} items={browCards} columns={3} />
         </div>
       </section>
       <Grid
@@ -243,7 +247,7 @@ export default async function HomePage() {
         ]}
       />
       <div className="container eye-products">
-        <Products items={eyeGlaze.items} columns={5} />
+        <Products items={eyeCards} columns={5} />
       </div>
       <section className="container mood-grid">
         <MoodPanel color="pink" title={home.moodLipTitle} text={home.moodLipText} items={moodLips.map(([s, n, c]) => [s, n, c ? collection(c) : cat("lip-liner")])} />

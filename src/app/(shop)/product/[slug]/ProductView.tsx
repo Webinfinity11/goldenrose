@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { AddToCart, FavButton } from "@/components/cart/CartUI";
 import { Gallery } from "@/components/Gallery";
@@ -37,7 +38,11 @@ export function ProductView({
   category: { name: string; href: string } | null;
   children: ReactNode;
 }) {
-  const [selectedId, setSelectedId] = useState(() => (variants.find((v) => v.inStock) ?? variants[0])?.id);
+  // ?color=<variant id> (links from the home carousels) opens the page with that color picked.
+  const fromLink = Number(useSearchParams().get("color"));
+  const [selectedId, setSelectedId] = useState(
+    () => (variants.find((v) => v.id === fromLink) ?? variants.find((v) => v.inStock) ?? variants[0])?.id,
+  );
   const v = variants.find((x) => x.id === selectedId) ?? null;
   const unit = v ?? product;
   const price = finalPrice(unit);

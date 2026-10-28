@@ -18,6 +18,8 @@ export type ProductCard = Pick<
   /** Number of variants; the card's basket button adds {@link defaultVariant}. */
   variantCount: number;
   defaultVariant: VariantOption | null;
+  /** Set on cards that stand for one color of a product (see {@link expandVariants}). */
+  variantCard?: boolean;
 };
 
 /** A variant as the storefront uses it: prices and photos already resolved against the product. */
@@ -250,6 +252,30 @@ export async function getProduct(slug: string) {
 
   const options = (await variantsOf([product.id])).map((v) => resolveVariant(v, product));
   return { product, variants: options, categories: linked, trail, related };
+}
+
+/**
+ * One card per color, as the design's home carousels show them: each card adds its own color and opens
+ * the product page with that color picked. Products without colors stay as they are.
+ */
+export async function expandVariants(cards: ProductCard[]): Promise<ProductCard[]> {
+  const all = await variantsOf(cards.filter((c) => c.variantCount > 0).map((c) => c.id));
+  return cards.flatMap((c) => {
+    const own = all.filter((v) => v.productId === c.id);
+    if (!own.length) return [c];
+    return own.map((raw) => {
+      const v = resolveVariant(raw, { price: c.price, salePrice: c.salePrice, images: c.image ? [c.image] : [] });
+      return {
+        ...c,
+        name: `${c.name} - ${v.name}`,
+        image: v.images[0] ?? c.image,
+        hoverImage: v.images[1] ?? null,
+        inStock: v.inStock,
+        defaultVariant: v,
+        variantCard: true,
+      };
+    });
+  });
 }
 
 /** Distinct brands and collections of published products, for the catalog filters. */
