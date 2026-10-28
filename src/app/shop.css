@@ -152,3 +152,8 @@ body.has-overlay { overflow: hidden; }
 /* language dropdown opens over the category menu below it */
 .header-main { position: relative; z-index: 45; }
 .language-menu { z-index: 50; white-space: nowrap; border-radius: 6px; }
+/* WhatsApp button: a touch larger, sitting low above the back-to-top button */
+.whatsapp-button { width: 56px; height: 56px; top: auto; bottom: 64px; }
+.whatsapp-button svg { width: 28px; height: 28px; }
+@media (max-width: 991px) { .whatsapp-button { width: 48px; height: 48px; } .whatsapp-button svg { width: 25px; height: 25px; } }
+@media (max-width: 600px) { .whatsapp-button { width: 46px; height: 46px; bottom: 65px; } }
