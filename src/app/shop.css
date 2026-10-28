@@ -189,3 +189,5 @@ button.pdp-variant { background: none; border: 0; padding: 0; cursor: pointer; f
 .pdp-variants-count { font-size: 12px; color: #999; }
 .cart-item-variant { display: block; font-size: 11px; color: #8d7c75; margin-bottom: 4px; }
 .purchase .add:disabled { background: #ddd; border-color: #ddd; color: #777; cursor: not-allowed; }
+.pdp-variant-img { position: relative; }
+.pdp-variant-dot { position: absolute; right: 5px; bottom: 5px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #0002; }

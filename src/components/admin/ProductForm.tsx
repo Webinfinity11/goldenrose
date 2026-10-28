@@ -49,6 +49,7 @@ export function ProductForm({
     initialVariants.map((v) => ({
       id: v.id,
       name: v.name,
+      color: v.color ?? "",
       sku: v.sku ?? "",
       price: str(v.price),
       salePrice: str(v.salePrice),

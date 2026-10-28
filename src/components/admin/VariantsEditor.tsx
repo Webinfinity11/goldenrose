@@ -8,6 +8,8 @@ import { ImageUploader } from "./ImageUploader";
 export type VariantDraft = {
   id?: number;
   name: string;
+  /** "#rrggbb" or "" for none. */
+  color: string;
   sku: string;
   price: string;
   salePrice: string;
@@ -16,7 +18,7 @@ export type VariantDraft = {
   images: string[];
 };
 
-export const emptyVariant = (name = ""): VariantDraft => ({ name, sku: "", price: "", salePrice: "", inStock: true, stockQty: "", images: [] });
+export const emptyVariant = (name = ""): VariantDraft => ({ name, color: "", sku: "", price: "", salePrice: "", inStock: true, stockQty: "", images: [] });
 
 /**
  * Colors / shades of a product. Each row: name, photos, price, stock. Empty price or photos fall back
@@ -77,6 +79,7 @@ export function VariantsEditor({
           <div key={v.id ?? `new-${i}`} className={`border rounded-xl p-3 ${available ? "border-slate-200 bg-white" : "border-red-200 bg-red-50/40"}`}>
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="text-xs font-bold text-slate-400 w-6">{i + 1}.</span>
+              <ColorPicker value={v.color} onChange={(color) => set(i, { color })} />
               <input
                 value={v.name}
                 onChange={(e) => set(i, { name: e.target.value })}
@@ -198,5 +201,25 @@ export function VariantsEditor({
         </div>
       )}
     </div>
+  );
+}
+
+/** Round swatch that opens the system color picker; "✕" removes the color. */
+function ColorPicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  return (
+    <span className="flex items-center gap-1">
+      <label
+        className="relative w-10 h-10 rounded-full border-2 border-slate-300 cursor-pointer shrink-0 overflow-hidden"
+        style={{ background: value || "repeating-conic-gradient(#e2e8f0 0 25%, #fff 0 50%) 50% / 12px 12px" }}
+        title={value ? `ფერი: ${value} (შესაცვლელად დააჭირეთ)` : "ფერის არჩევა"}
+      >
+        <input type="color" value={value || "#d4a5a5"} onChange={(e) => onChange(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer" />
+      </label>
+      {value && (
+        <button type="button" onClick={() => onChange("")} className="text-xs text-slate-400 hover:text-red-600" title="ფერის მოხსნა">
+          ✕
+        </button>
+      )}
+    </span>
   );
 }

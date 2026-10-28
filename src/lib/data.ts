@@ -26,6 +26,7 @@ export type ProductCard = Pick<
 export type VariantOption = {
   id: number;
   name: string;
+  color: string | null;
   sku: string | null;
   price: number;
   salePrice: number | null;
@@ -39,6 +40,7 @@ export function resolveVariant(v: Variant, p: Pick<Product, "price" | "salePrice
   return {
     id: v.id,
     name: v.name,
+    color: v.color,
     sku: v.sku,
     price: own ? v.price! : p.price,
     salePrice: v.salePrice ?? (own ? null : p.salePrice),

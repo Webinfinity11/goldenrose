@@ -110,7 +110,10 @@ export function ProductView({
                   onClick={() => setSelectedId(x.id)}
                   title={x.inStock ? x.name : `${x.name} (out of stock)`}
                 >
-                  <span className="pdp-variant-img">{x.images[0] && <Image src={x.images[0]} alt="" width={70} height={90} />}</span>
+                  <span className="pdp-variant-img">
+                    {x.images[0] && <Image src={x.images[0]} alt="" width={70} height={90} />}
+                    {x.color && <span className="pdp-variant-dot" style={{ background: x.color }} />}
+                  </span>
                   <span className="pdp-variant-label">{x.name}</span>
                 </button>
               ))}

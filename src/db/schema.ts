@@ -81,6 +81,8 @@ export const variants = pgTable(
       .notNull()
       .references(() => products.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
+    // Swatch color shown on the product page, e.g. "#c0392b"; null = the photo only.
+    color: text("color"),
     sku: text("sku"),
     price: numeric("price", { precision: 10, scale: 2, mode: "number" }),
     salePrice: numeric("sale_price", { precision: 10, scale: 2, mode: "number" }),

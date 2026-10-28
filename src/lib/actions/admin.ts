@@ -102,6 +102,7 @@ const productSchema = z.object({
       z.object({
         id: z.number().int().positive().optional(),
         name: z.string().trim().min(1, "ვარიაციას მიუთითეთ სახელი").max(120),
+        color: z.union([z.literal(""), z.string().regex(/^#[0-9a-f]{6}$/i, "ფერის კოდი უნდა იყოს მაგ. #c0392b")]).optional(),
         sku: z.string().trim().max(60).optional(),
         price: z.union([z.literal(""), z.null(), money]).optional(),
         salePrice: z.union([z.literal(""), z.null(), money]).optional(),
@@ -177,6 +178,7 @@ export async function saveProduct(id: number | null, input: ProductInput): Promi
     return {
       id: v.id,
       name: v.name,
+      color: v.color ? v.color.toLowerCase() : null,
       sku: v.sku || null,
       price: opt(v.price),
       salePrice: opt(v.salePrice),
