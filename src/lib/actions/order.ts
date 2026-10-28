@@ -1,12 +1,12 @@
 "use server";
 
-import { and, eq, gte, sql } from "drizzle-orm";
+import { and, eq, gte, inArray, sql } from "drizzle-orm";
 import { updateTag } from "next/cache";
 import { z } from "zod";
-import { db, orders, products, type OrderItem } from "@/db";
-import { getProductsByIds } from "@/lib/data";
+import { db, orders, products, variants, type OrderItem } from "@/db";
+import { getProductsByIds, resolveVariant } from "@/lib/data";
 import { finalPrice } from "@/lib/format";
-import { adjustStock } from "@/lib/stock";
+import { adjustStock, syncVariantStock } from "@/lib/stock";
 import { notifyNewOrder } from "@/lib/notify";
 import { after } from "next/server";
 
@@ -20,7 +20,9 @@ const schema = z.object({
   address: z.string().trim().min(5, "Please enter a delivery address").max(500),
   comment: z.string().trim().max(1000).optional(),
   items: z
-    .array(z.object({ id: z.number().int().positive(), qty: z.number().int().min(1).max(999) }))
+    .array(
+      z.object({ id: z.number().int().positive(), variantId: z.number().int().positive().optional(), qty: z.number().int().min(1).max(999) }),
+    )
     .min(1, "Your cart is empty")
     .max(200),
 });
@@ -34,32 +36,57 @@ export async function placeOrder(input: z.input<typeof schema>): Promise<OrderRe
 
   // Prices and stock always come from the database, never from the browser.
   const found = await getProductsByIds(data.items.map((i) => i.id));
+  const variantIds = data.items.flatMap((i) => (i.variantId ? [i.variantId] : []));
+  const foundVariants = variantIds.length ? await db.select().from(variants).where(inArray(variants.id, variantIds)) : [];
   const items: OrderItem[] = [];
   for (const i of data.items) {
     const p = found.find((f) => f.id === i.id);
-    if (!p || !p.inStock) continue;
-    if (p.stockQty != null && i.qty > p.stockQty)
-      return { ok: false, error: `Only ${p.stockQty} of “${p.name}” left in stock. Please update the quantity in your cart.` };
-    items.push({ productId: p.id, name: p.name, sku: p.sku, price: finalPrice(p), qty: i.qty, image: p.images[0] ?? null });
+    if (!p) continue;
+    const raw = i.variantId ? foundVariants.find((v) => v.id === i.variantId && v.productId === p.id) : undefined;
+    if (i.variantId && !raw) continue;
+    // A variant carries its own price, stock and photo; otherwise the product's are used.
+    const v = raw ? resolveVariant(raw, p) : null;
+    const unit = v ?? p;
+    const label = v ? `${p.name} (${v.name})` : p.name;
+    if (!unit.inStock) continue;
+    if (unit.stockQty != null && i.qty > unit.stockQty)
+      return { ok: false, error: `Only ${unit.stockQty} of “${label}” left in stock. Please update the quantity in your cart.` };
+    items.push({
+      productId: p.id,
+      ...(v && { variantId: v.id, variant: v.name }),
+      name: p.name,
+      sku: v?.sku ?? p.sku,
+      price: finalPrice(unit),
+      qty: i.qty,
+      image: unit.images[0] ?? null,
+    });
   }
   if (!items.length) return { ok: false, error: "The products in your cart are no longer available." };
 
   // Reserve tracked stock with conditional updates so two simultaneous orders can't oversell.
-  const reserved: { productId: number; qty: number }[] = [];
+  const reserved: { productId: number; variantId?: number; qty: number }[] = [];
   for (const i of items) {
     const p = found.find((f) => f.id === i.productId)!;
-    if (p.stockQty == null) continue;
-    const ok = await db
-      .update(products)
-      .set({ stockQty: sql`${products.stockQty} - ${i.qty}`, inStock: sql`${products.stockQty} - ${i.qty} > 0` })
-      .where(and(eq(products.id, p.id), gte(products.stockQty, i.qty)))
-      .returning({ id: products.id });
+    const v = i.variantId ? foundVariants.find((x) => x.id === i.variantId)! : null;
+    if ((v ?? p).stockQty == null) continue;
+    const ok = v
+      ? await db
+          .update(variants)
+          .set({ stockQty: sql`${variants.stockQty} - ${i.qty}`, inStock: sql`${variants.stockQty} - ${i.qty} > 0` })
+          .where(and(eq(variants.id, v.id), gte(variants.stockQty, i.qty)))
+          .returning({ id: variants.id })
+      : await db
+          .update(products)
+          .set({ stockQty: sql`${products.stockQty} - ${i.qty}`, inStock: sql`${products.stockQty} - ${i.qty} > 0` })
+          .where(and(eq(products.id, p.id), gte(products.stockQty, i.qty)))
+          .returning({ id: products.id });
     if (!ok.length) {
       await adjustStock(reserved, 1);
-      return { ok: false, error: `Sorry, “${p.name}” just sold out. Please update your cart.` };
+      return { ok: false, error: `Sorry, “${v ? `${p.name} (${v.name})` : p.name}” just sold out. Please update your cart.` };
     }
-    reserved.push({ productId: p.id, qty: i.qty });
+    reserved.push({ productId: p.id, variantId: v?.id, qty: i.qty });
   }
+  if (reserved.some((r) => r.variantId)) await syncVariantStock([...new Set(reserved.map((r) => r.productId))]);
 
   const total = items.reduce((n, i) => n + i.price * i.qty, 0);
   try {

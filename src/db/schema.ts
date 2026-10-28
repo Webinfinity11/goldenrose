@@ -14,6 +14,9 @@ import {
 export type Spec = { label: string; value: string };
 export type OrderItem = {
   productId: number;
+  /** Set when the product was bought in a specific variant (shade). */
+  variantId?: number;
+  variant?: string;
   name: string;
   sku: string | null;
   price: number;
@@ -64,6 +67,30 @@ export const products = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("products_sku_idx").on(t.sku), index("products_brand_idx").on(t.brand), index("products_collection_idx").on(t.collection)],
+);
+
+/**
+ * Variants (shades) of a product: one product page, the shopper picks the variant there.
+ * Price / sale price left empty use the product's; images left empty use the product's.
+ */
+export const variants = pgTable(
+  "variants",
+  {
+    id: serial("id").primaryKey(),
+    productId: integer("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    sku: text("sku"),
+    price: numeric("price", { precision: 10, scale: 2, mode: "number" }),
+    salePrice: numeric("sale_price", { precision: 10, scale: 2, mode: "number" }),
+    inStock: boolean("in_stock").notNull().default(true),
+    // null = stock isn't tracked for this variant; otherwise in_stock follows stock_qty > 0
+    stockQty: integer("stock_qty"),
+    images: jsonb("images").$type<string[]>().notNull().default([]),
+    sortOrder: integer("sort_order").notNull().default(0),
+  },
+  (t) => [index("variants_product_idx").on(t.productId)],
 );
 
 export const productCategories = pgTable(
@@ -117,3 +144,4 @@ export const subscribers = pgTable("subscribers", {
 export type Category = typeof categories.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type Order = typeof orders.$inferSelect;
+export type Variant = typeof variants.$inferSelect;

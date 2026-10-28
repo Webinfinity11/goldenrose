@@ -2,15 +2,26 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import type { Product, Spec } from "@/db/schema";
+import type { Product, Spec, Variant } from "@/db/schema";
 import { deleteProduct, saveProduct } from "@/lib/actions/admin";
 import { slugify } from "@/lib/admin-shared";
 import { Button, Card, Field, inputCls } from "./ui";
 import { ImageUploader } from "./ImageUploader";
+import { VariantsEditor, type VariantDraft } from "./VariantsEditor";
 
 type Cat = { id: number; name: string; parentId: number | null };
 
-export function ProductForm({ product, categories, selected }: { product: Product | null; categories: Cat[]; selected: number[] }) {
+export function ProductForm({
+  product,
+  variants: initialVariants = [],
+  categories,
+  selected,
+}: {
+  product: Product | null;
+  variants?: Variant[];
+  categories: Cat[];
+  selected: number[];
+}) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
@@ -33,6 +44,19 @@ export function ProductForm({ product, categories, selected }: { product: Produc
   const [volume, setVolume] = useState(product?.volume ?? "");
   const [country, setCountry] = useState(product?.country ?? "");
   const [specs, setSpecs] = useState<Spec[]>(product?.specs ?? []);
+  const str = (n: number | null) => (n == null ? "" : String(n));
+  const [variants, setVariants] = useState<VariantDraft[]>(
+    initialVariants.map((v) => ({
+      id: v.id,
+      name: v.name,
+      sku: v.sku ?? "",
+      price: str(v.price),
+      salePrice: str(v.salePrice),
+      inStock: v.inStock,
+      stockQty: str(v.stockQty),
+      images: v.images,
+    })),
+  );
   const [images, setImages] = useState<string[]>(product?.images ?? []);
   const [cats, setCats] = useState<number[]>(selected);
   const [catFilter, setCatFilter] = useState("");
@@ -70,6 +94,7 @@ export function ProductForm({ product, categories, selected }: { product: Produc
         country,
         specs,
         images,
+        variants: variants.map((v) => ({ ...v, stockQty: v.stockQty.trim() === "" ? null : v.stockQty })),
         categoryIds: cats,
       });
       if (!res.ok) return setMessage({ ok: false, text: res.error });
@@ -140,6 +165,10 @@ export function ProductForm({ product, categories, selected }: { product: Produc
 
         <Card title="სურათები">
           <ImageUploader value={images} onChange={setImages} />
+        </Card>
+
+        <Card title={`ვარიაციები / ფერები (${variants.length})`}>
+          <VariantsEditor value={variants} onChange={setVariants} />
         </Card>
 
         <Card title="აღწერა">

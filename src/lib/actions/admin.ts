@@ -5,11 +5,11 @@ import { put } from "@vercel/blob";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { uploadDir } from "@/lib/uploads";
-import { and, eq, ne, sql } from "drizzle-orm";
+import { and, eq, inArray, ne, sql } from "drizzle-orm";
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { admins, categories, db, orders, productCategories, products, settings } from "@/db";
+import { admins, categories, db, orders, productCategories, products, settings, variants } from "@/db";
 import { ORDER_STATUSES, slugify } from "@/lib/admin-shared";
 import { adjustStock } from "@/lib/stock";
 import { sanitizeSection } from "@/lib/content";
@@ -97,6 +97,21 @@ const productSchema = z.object({
   country: z.string().trim().max(60).optional(),
   specs: z.array(z.object({ label: z.string().trim().max(80), value: z.string().trim().max(200) })).max(40),
   images: z.array(imageUrl).max(12),
+  variants: z
+    .array(
+      z.object({
+        id: z.number().int().positive().optional(),
+        name: z.string().trim().min(1, "ვარიაციას მიუთითეთ სახელი").max(120),
+        sku: z.string().trim().max(60).optional(),
+        price: z.union([z.literal(""), z.null(), money]).optional(),
+        salePrice: z.union([z.literal(""), z.null(), money]).optional(),
+        inStock: z.boolean(),
+        stockQty: z.union([z.literal(""), z.null(), z.coerce.number().int().min(0).max(1_000_000)]).optional(),
+        images: z.array(imageUrl).max(8),
+      }),
+    )
+    .max(200)
+    .default([]),
   categoryIds: z.array(z.number().int()).max(30),
 });
 export type ProductInput = z.input<typeof productSchema>;
@@ -154,9 +169,44 @@ export async function saveProduct(id: number | null, input: ProductInput): Promi
     updatedAt: new Date(),
   };
 
+  // Variants: prices left empty use the product's; the product itself shows the cheapest one and is
+  // in stock while any variant is.
+  const opt = (v: "" | null | undefined | number) => (v === "" || v == null ? null : Number(v));
+  const vrows = d.variants.map((v, i) => {
+    const qty = opt(v.stockQty);
+    return {
+      id: v.id,
+      name: v.name,
+      sku: v.sku || null,
+      price: opt(v.price),
+      salePrice: opt(v.salePrice),
+      stockQty: qty,
+      inStock: qty === null ? v.inStock : qty > 0,
+      images: v.images,
+      sortOrder: i,
+    };
+  });
+  for (const v of vrows) {
+    const own = v.price ?? d.price;
+    if (v.salePrice !== null && v.salePrice >= own) return fail(`„${v.name}“: ფასდაკლებული ფასი ძველ ფასზე ნაკლები უნდა იყოს`);
+  }
+  if (vrows.length) {
+    values.inStock = vrows.some((v) => v.inStock);
+    values.stockQty = null;
+  }
+
   let productId = id;
   if (id) await db.update(products).set(values).where(eq(products.id, id));
   else [{ id: productId }] = await db.insert(products).values(values).returning({ id: products.id });
+
+  const existing = await db.select({ id: variants.id }).from(variants).where(eq(variants.productId, productId!));
+  const keep = vrows.flatMap((v) => (v.id && existing.some((e) => e.id === v.id) ? [v.id] : []));
+  const gone = existing.filter((e) => !keep.includes(e.id)).map((e) => e.id);
+  if (gone.length) await db.delete(variants).where(inArray(variants.id, gone));
+  for (const { id: vid, ...v } of vrows) {
+    if (vid && keep.includes(vid)) await db.update(variants).set(v).where(eq(variants.id, vid));
+    else await db.insert(variants).values({ ...v, productId: productId! });
+  }
 
   await db.delete(productCategories).where(eq(productCategories.productId, productId!));
   if (d.categoryIds.length)
@@ -244,7 +294,7 @@ export async function setOrderStatus(id: number, status: string): Promise<Action
   if (!order) return fail("შეკვეთა ვერ მოიძებნა");
   if (order.status === status) return { ok: true };
   // Cancelling returns the units to stock; re-opening a cancelled order takes them again.
-  const units = order.items.map((i) => ({ productId: i.productId, qty: i.qty }));
+  const units = order.items.map((i) => ({ productId: i.productId, variantId: i.variantId, qty: i.qty }));
   if (status === "cancelled") await adjustStock(units, 1);
   else if (order.status === "cancelled") await adjustStock(units, -1);
   await db.update(orders).set({ status }).where(eq(orders.id, id));

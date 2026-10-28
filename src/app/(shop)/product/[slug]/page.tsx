@@ -1,17 +1,15 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Icon } from "@/components/Icon";
-import { AddToCart, FavButton } from "@/components/cart/CartUI";
-import { Gallery } from "@/components/Gallery";
-import { ProductCard, StockLabel } from "@/components/ProductCard";
+import { ProductCard } from "@/components/ProductCard";
 import { ProductTabs } from "@/components/ProductTabs";
 import { RailScroller } from "@/components/RailScroller";
 import { getContent } from "@/lib/content";
-import { getAllSlugs, getProduct, getVariants } from "@/lib/data";
-import { categoryUrl, discount, finalPrice, gelAmount, oldSlugRedirect, productUrl } from "@/lib/format";
+import { getAllSlugs, getProduct } from "@/lib/data";
+import { categoryUrl, finalPrice, oldSlugRedirect, productUrl } from "@/lib/format";
 import { site } from "@/lib/site";
+import { ProductView } from "./ProductView";
 
 const slugOf = async (params: PageProps<"/product/[slug]">["params"]) => decodeURIComponent((await params).slug);
 
@@ -34,16 +32,13 @@ export async function generateMetadata({ params }: PageProps<"/product/[slug]">)
 async function ProductContent({ params }: PageProps<"/product/[slug]">) {
   const [data, { delivery }] = await Promise.all([getProduct(await slugOf(params)), getContent()]);
   if (!data) return oldSlugRedirect(await slugOf(params), productUrl);
-  const { product, trail, categories, related } = data;
-  const variants = product.collection ? await getVariants(product.collection) : [];
-  const current = variants.find((v) => v.id === product.id);
-  const price = finalPrice(product);
-  const off = discount(product);
-  const item = { id: product.id, name: product.name, slug: product.slug, price, image: product.images[0] ?? null, max: product.stockQty ?? undefined };
+  const { product, variants, trail, categories, related } = data;
+  const price = finalPrice(variants.find((v) => v.inStock) ?? variants[0] ?? product);
   const attrs = [
     product.brand && { label: "Brand", value: product.brand },
     product.collection && { label: "Collection", value: product.collection },
     product.shade && { label: "Shade", value: product.shade },
+    variants.length > 0 && { label: "Colors", value: String(variants.length) },
     product.volume && { label: "Size", value: product.volume },
     product.country && { label: "Country of Origin", value: product.country },
   ].filter((a): a is { label: string; value: string } => !!a);
@@ -81,66 +76,22 @@ async function ProductContent({ params }: PageProps<"/product/[slug]">) {
           ))}
         </nav>
       </div>
-      <div className="pdp">
-        <Gallery images={product.images} name={product.name} badge={off > 0 ? `−${off}%` : null} />
-        <div className="pdp-info">
-          {trail.length > 0 && (
-            <Link className="pdp-cat" href={categoryUrl(trail.at(-1)!.slug)}>
-              {trail.at(-1)!.name}
-            </Link>
-          )}
-          <h1>{product.name}</h1>
-          <div className="pdp-meta">
-            <StockLabel inStock={product.inStock} stockQty={product.stockQty} />
-            {product.sku && <span className="pdp-sku">SKU: {product.sku}</span>}
-          </div>
-          {product.summary && <p className="pdp-lead">{product.summary}</p>}
-          <div className="pdp-price">
-            {price > 0 ? (
-              <span className="pdp-price-now">
-                {gelAmount(price)}
-                <span className="pdp-cur">₾</span>
-              </span>
-            ) : (
-              <span className="pdp-price-now price-request">Price on Request</span>
-            )}
-            {off > 0 && (
-              <>
-                <span className="pdp-price-old">{gelAmount(product.price)} ₾</span>
-                <span className="pdp-price-off">−{off}%</span>
-              </>
-            )}
-          </div>
-          {variants.length > 1 && current && (
-            <div className="pdp-variants">
-              <div className="pdp-variants-head">
-                <span>
-                  <b>{product.shade ? "Color" : "Variant"}:</b> {current.label}
-                </span>
-                <Link href={`/catalog?collection=${encodeURIComponent(product.collection!)}`}>Show All Colors</Link>
-              </div>
-              <div className="pdp-variants-list">
-                {variants.map((v) => (
-                  <Link
-                    key={v.id}
-                    href={productUrl(v.slug)}
-                    className={v.id === product.id ? "pdp-variant is-current" : v.inStock ? "pdp-variant" : "pdp-variant is-out"}
-                    aria-current={v.id === product.id ? "page" : undefined}
-                    title={v.label}
-                  >
-                    <span className="pdp-variant-img">{v.image && <Image src={v.image} alt="" width={70} height={90} />}</span>
-                    <span className="pdp-variant-label">{v.label}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-          {product.inStock && (
-            <div className="pdp-buy">
-              <AddToCart item={item} size="lg" />
-              <FavButton item={item} />
-            </div>
-          )}
+      <ProductView
+        product={{
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          sku: product.sku,
+          price: product.price,
+          salePrice: product.salePrice,
+          inStock: product.inStock,
+          stockQty: product.stockQty,
+          images: product.images,
+          summary: product.summary,
+        }}
+        variants={variants}
+        category={trail.length > 0 ? { name: trail.at(-1)!.name, href: categoryUrl(trail.at(-1)!.slug) } : null}
+      >
           {(attrs.length > 0 || product.specs.length > 0) && (
             <div className="pdp-block">
               <h2 className="pdp-block-title">Specifications</h2>
@@ -166,8 +117,7 @@ async function ProductContent({ params }: PageProps<"/product/[slug]">) {
               ))}
             </div>
           )}
-        </div>
-      </div>
+      </ProductView>
       <ProductTabs
         tabs={[
           ...(product.description ? [{ id: "description", label: "Description", content: <p className="pdp-desc">{product.description}</p> }] : []),

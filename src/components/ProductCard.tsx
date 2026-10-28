@@ -8,9 +8,20 @@ const sizes = "(max-width: 600px) 45vw, (max-width: 991px) 30vw, 280px";
 
 /** Product card of the Golden Rose design: photo with hover swap, New badge, favourite, name, prices and the round basket button. */
 export function ProductCard({ p, priority }: { p: Card; priority?: boolean }) {
-  const price = finalPrice(p);
-  const off = discount(p);
-  const item = { id: p.id, name: p.name, slug: p.slug, price, image: p.image, max: p.stockQty ?? undefined };
+  // A product with colors shows and adds its first available one.
+  const v = p.defaultVariant;
+  const unit = v ?? p;
+  const price = finalPrice(unit);
+  const off = discount(unit);
+  const item = {
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    price,
+    image: v?.images[0] ?? p.image,
+    max: unit.stockQty ?? undefined,
+    ...(v && { variantId: v.id, variant: v.name }),
+  };
   const href = productUrl(p.slug);
   return (
     <article className="product-card">
@@ -30,9 +41,10 @@ export function ProductCard({ p, priority }: { p: Card; priority?: boolean }) {
         <Link className="product-name" href={href}>
           {p.name}
         </Link>
+        {p.variantCount > 1 && <span className="product-colors">{p.variantCount} colors</span>}
         <div className="product-bottom">
           <div className="prices">
-            {off > 0 && <span className="old-price">{gel(p.price)}</span>}
+            {off > 0 && <span className="old-price">{gel(unit.price)}</span>}
             <div className="current-price-line">
               <span className="price">{gel(price)}</span>
               {off > 0 && (

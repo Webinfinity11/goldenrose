@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { GrIcon } from "@/components/gr/GrIcon";
 import { gel, productUrl } from "@/lib/format";
-import { MAX_QTY, useCart, type FavItem } from "./CartProvider";
+import { MAX_QTY, useCart, type CartItem, type FavItem } from "./CartProvider";
 
 export function Stepper({ value, onChange, label, max = MAX_QTY }: { value: number; onChange: (n: number) => void; label: string; max?: number }) {
   const [draft, setDraft] = useState(String(value));
@@ -34,7 +34,7 @@ export function Stepper({ value, onChange, label, max = MAX_QTY }: { value: numb
   );
 }
 
-export function AddToCart({ item, size }: { item: FavItem; size?: "lg" }) {
+export function AddToCart({ item, size, disabled }: { item: CartItem; size?: "lg"; disabled?: boolean }) {
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const max = Math.min(MAX_QTY, item.max ?? MAX_QTY);
@@ -46,11 +46,12 @@ export function AddToCart({ item, size }: { item: FavItem; size?: "lg" }) {
         type="button"
         className={size === "lg" ? "add" : "add add-icon"}
         onClick={() => add(item, qty)}
-        aria-label={`Add to cart: ${item.name}`}
+        disabled={disabled}
+        aria-label={`Add to cart: ${item.name}${item.variant ? ` (${item.variant})` : ""}`}
         title="Add to cart"
       >
         <Icon name="cart" />
-        {size === "lg" && "Add to Cart"}
+        {size === "lg" && (disabled ? "Out of Stock" : "Add to Cart")}
       </button>
     </div>
   );
@@ -73,7 +74,7 @@ export function FavButton({ item, className = "heart" }: { item: FavItem; classN
 }
 
 /** The round basket button of a product card: adds one item. */
-export function CardAddButton({ item }: { item: FavItem }) {
+export function CardAddButton({ item }: { item: CartItem }) {
   const { add } = useCart();
   return (
     <button className="add-button" type="button" onClick={() => add(item, 1)} aria-label={`Add to cart: ${item.name}`}>
@@ -179,7 +180,7 @@ export function CartDrawer() {
           <>
             <div className="cart-items">
               {lines.map((l) => (
-                <article className="cart-item" key={l.id}>
+                <article className="cart-item" key={l.key}>
                   {l.image ? (
                     <Image className="cart-item-image" src={l.image} alt="" width={92} height={104} />
                   ) : (
@@ -191,10 +192,11 @@ export function CartDrawer() {
                         {l.name}
                       </Link>
                     </h3>
+                    {l.variant && <small className="cart-item-variant">{l.variant}</small>}
                     <p className="cart-item-price">{gel(l.price * l.qty)}</p>
-                    <QtyControl value={l.qty} max={l.max} label={l.name} onChange={(n) => setQty(l.id, n)} />
+                    <QtyControl value={l.qty} max={l.max} label={l.name} onChange={(n) => setQty(l.key, n)} />
                   </div>
-                  <button className="cart-remove" type="button" onClick={() => remove(l.id)} aria-label={`Remove from cart: ${l.name}`}>
+                  <button className="cart-remove" type="button" onClick={() => remove(l.key)} aria-label={`Remove from cart: ${l.name}`}>
                     <Icon name="trash" />
                   </button>
                 </article>

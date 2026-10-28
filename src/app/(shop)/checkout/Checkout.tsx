@@ -76,7 +76,7 @@ export function Checkout() {
                   email: String(f.get("email") ?? ""),
                   address: String(f.get("address")),
                   comment: String(f.get("comment") ?? ""),
-                  items: lines.map((l) => ({ id: l.id, qty: l.qty })),
+                  items: lines.map((l) => ({ id: l.id, variantId: l.variantId, qty: l.qty })),
                 });
                 if (res.ok) {
                   clear();
@@ -148,12 +148,15 @@ export function Checkout() {
             </div>
             <div className="summary-lines">
               {lines.map((l) => (
-                <div className="summary-line" key={l.id}>
+                <div className="summary-line" key={l.key}>
                   <span className="thumb">
                     {l.image && <Image src={l.image} alt="" fill sizes="52px" />}
                     <b>{l.qty}</b>
                   </span>
-                  <span className="name">{l.name}</span>
+                  <span className="name">
+                    {l.name}
+                    {l.variant && <small> · {l.variant}</small>}
+                  </span>
                   <strong>{money(l.price * l.qty)} ₾</strong>
                 </div>
               ))}

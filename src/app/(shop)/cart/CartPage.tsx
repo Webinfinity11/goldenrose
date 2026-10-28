@@ -39,7 +39,7 @@ export function CartPage() {
           </button>
         </div>
         {lines.map((l) => (
-          <div className="cart-row" key={l.id}>
+          <div className="cart-row" key={l.key}>
             <Link href={productUrl(l.slug)} className="cart-row-img">
               {l.image && <Image src={l.image} alt="" fill sizes="96px" />}
             </Link>
@@ -47,11 +47,12 @@ export function CartPage() {
               <Link href={productUrl(l.slug)} className="cart-row-name">
                 {l.name}
               </Link>
+              {l.variant && <span className="small">{l.variant}</span>}
               <span className="muted small">{money(l.price)} ₾ / each</span>
             </div>
-            <Stepper value={l.qty} onChange={(n) => setQty(l.id, n)} label={l.name} max={l.max} />
+            <Stepper value={l.qty} onChange={(n) => setQty(l.key, n)} label={l.name} max={l.max} />
             <strong className="cart-row-sum">{money(l.price * l.qty)} ₾</strong>
-            <button className="remove" onClick={() => remove(l.id)} aria-label={`Remove ${l.name}`}>
+            <button className="remove" onClick={() => remove(l.key)} aria-label={`Remove ${l.name}`}>
               <Icon name="trash" />
             </button>
           </div>

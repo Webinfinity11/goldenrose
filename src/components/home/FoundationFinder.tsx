@@ -22,17 +22,13 @@ export function FoundationFinder({ eyebrow, title, text, foundations }: { eyebro
   const [answers, setAnswers] = useState<string[]>([]);
   const step = answers.length;
 
-  const suggest = () => {
+  const suggest = (): { pick?: Option; shade?: string } => {
     const find = (re: RegExp) => foundations.find((f) => re.test(f.name));
     const depth = questions[2].options.indexOf(answers[2]);
-    let pick: Option | undefined;
-    if (answers[0] === "Full") pick = find(/Total Cover/i);
-    else if (answers[0] === "Medium" && answers[1] === "Matte") pick = find(/Stay Soft/i);
-    else {
-      const shade = answers[3] === "Neutral" && depth < 3 ? "102" : depth === 0 ? "101" : depth === 1 ? "103" : "104";
-      pick = find(new RegExp(`Skin Perfector.*${shade}`));
-    }
-    return pick ?? foundations[0];
+    if (answers[0] === "Full") return { pick: find(/Total Cover/i) ?? foundations[0] };
+    if (answers[0] === "Medium" && answers[1] === "Matte") return { pick: find(/Stay Soft/i) ?? foundations[0] };
+    const shade = answers[3] === "Neutral" && depth < 3 ? "102 Neutral" : depth === 0 ? "101 Beige" : depth === 1 ? "103 Nude" : "104 Warm Honey";
+    return { pick: find(/Skin Perfector/i) ?? foundations[0], shade };
   };
 
   return (
@@ -65,7 +61,7 @@ export function FoundationFinder({ eyebrow, title, text, foundations }: { eyebro
               )}
             </>
           ) : (
-            <Result answers={answers} pick={suggest()} reset={() => setAnswers([])} />
+            <Result answers={answers} {...suggest()} reset={() => setAnswers([])} />
           )}
         </div>
       </div>
@@ -73,7 +69,7 @@ export function FoundationFinder({ eyebrow, title, text, foundations }: { eyebro
   );
 }
 
-function Result({ answers, pick, reset }: { answers: string[]; pick?: Option; reset: () => void }) {
+function Result({ answers, pick, shade, reset }: { answers: string[]; pick?: Option; shade?: string; reset: () => void }) {
   return (
     <>
       <small>YOUR MATCHES</small>
@@ -84,6 +80,7 @@ function Result({ answers, pick, reset }: { answers: string[]; pick?: Option; re
           <>
             <br />
             <strong>{pick.name}</strong>
+            {shade && <> · suggested shade: <strong>{shade}</strong></>}
           </>
         )}
       </p>

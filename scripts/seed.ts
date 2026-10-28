@@ -2,7 +2,7 @@
 // Usage: npx tsx scripts/seed.ts   (refuses to run if products already exist)
 import "./env";
 import { sql } from "drizzle-orm";
-import { categories, db, productCategories, products } from "../src/db";
+import { categories, db, productCategories, products, variants } from "../src/db";
 import { slugify } from "../src/lib/admin-shared";
 import data from "./data/products.json";
 
@@ -72,10 +72,16 @@ type Seed = {
 };
 const items = data as Seed[];
 
+// One product per collection; its shades become variants (colors). A collection with a single,
+// shade-less item stays a plain product under its full name.
+const groups = [...Map.groupBy(items, (it) => it.collection).values()].map((g) =>
+  g.sort((a, b) => (a.shade ?? "").localeCompare(b.shade ?? "", "en", { numeric: true })),
+);
+
 (async () => {
   const [{ n }] = await db.select({ n: sql<number>`count(*)::int` }).from(products);
   if (n > 0) {
-    console.log(`database already has ${n} products — seed skipped`);
+    console.log(`database already has ${n} products вЂ” seed skipped`);
     process.exit(0);
   }
 
@@ -103,32 +109,46 @@ const items = data as Seed[];
     }
   }
 
-  for (const [i, it] of items.entries()) {
+  for (const [i, group] of groups.entries()) {
+    const it = group[0];
+    const multi = group.length > 1 || it.shade != null;
+    const price = Math.min(...group.map((g) => g.price));
     const [p] = await db
       .insert(products)
       .values({
-        name: it.name,
-        slug: slugify(it.name),
+        name: multi ? it.collection : it.name,
+        slug: slugify(multi ? it.collection : it.name),
         sku: `GR-${String(1000 + i)}`,
-        price: it.price,
+        price,
         salePrice: it.salePrice,
-        featured: it.featured,
+        featured: group.some((g) => g.featured),
         // "New" products keep a fresh date (badge "New"); the rest are backdated.
         createdAt: new Date(Date.now() - (it.isNew ? i * 60_000 : (60 + i) * 86_400_000)),
-        summary: [it.collection, it.shade].filter(Boolean).join(" · "),
         description: it.description,
         images: it.images,
         brand: "Golden Rose",
         collection: it.collection,
-        shade: it.shade,
         country: "Turkey",
       })
       .returning({ id: products.id });
+    if (multi)
+      await db.insert(variants).values(
+        group.map((g, j) => ({
+          productId: p.id,
+          // Shade-less items in a group are named by the part after the collection ("Clear Brow Fixing Gel").
+          name: g.shade ?? g.name.split(" - ").at(-1)!,
+          sku: `GR-${1000 + i}-${String(j + 1).padStart(2, "0")}`,
+          price: g.price === price ? null : g.price,
+          salePrice: g.salePrice === it.salePrice ? null : g.salePrice,
+          images: g.images,
+          sortOrder: j,
+        })),
+      );
     // Link to the category and all its ancestors, as the admin form does.
     const chain = [it.category];
     while (parents.has(chain.at(-1)!)) chain.push(parents.get(chain.at(-1)!)!);
     await db.insert(productCategories).values(chain.map((name) => ({ productId: p.id, categoryId: ids.get(name)! })));
   }
-  console.log(`seeded ${ids.size} categories and ${items.length} products`);
+  console.log(`seeded ${ids.size} categories, ${groups.length} products, ${items.length} items`);
   process.exit(0);
 })();

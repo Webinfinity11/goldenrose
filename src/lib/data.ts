@@ -1,6 +1,6 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { and, asc, desc, eq, ilike, inArray, isNotNull, or, sql, type SQL } from "drizzle-orm";
-import { db, categories, products, productCategories, type Category, type Product } from "@/db";
+import { db, categories, products, productCategories, variants, type Category, type Product, type Variant } from "@/db";
 
 /** Products added within this many days get the "ახალი" badge. */
 const NEW_DAYS = 14;
@@ -9,7 +9,47 @@ export type CategoryNode = Category & { count: number; children: CategoryNode[] 
 export type ProductCard = Pick<
   Product,
   "id" | "name" | "slug" | "sku" | "price" | "salePrice" | "inStock" | "stockQty" | "brand" | "collection" | "shade"
-> & { image: string | null; hoverImage: string | null; category: string | null; rootCategoryId: number | null; isNew: boolean };
+> & {
+  image: string | null;
+  hoverImage: string | null;
+  category: string | null;
+  rootCategoryId: number | null;
+  isNew: boolean;
+  /** Number of variants; the card's basket button adds {@link defaultVariant}. */
+  variantCount: number;
+  defaultVariant: VariantOption | null;
+};
+
+/** A variant as the storefront uses it: prices and photos already resolved against the product. */
+export type VariantOption = {
+  id: number;
+  name: string;
+  sku: string | null;
+  price: number;
+  salePrice: number | null;
+  inStock: boolean;
+  stockQty: number | null;
+  images: string[];
+};
+
+export function resolveVariant(v: Variant, p: Pick<Product, "price" | "salePrice" | "images">): VariantOption {
+  const own = v.price != null;
+  return {
+    id: v.id,
+    name: v.name,
+    sku: v.sku,
+    price: own ? v.price! : p.price,
+    salePrice: v.salePrice ?? (own ? null : p.salePrice),
+    inStock: v.inStock,
+    stockQty: v.stockQty,
+    images: v.images.length ? v.images : p.images,
+  };
+}
+
+async function variantsOf(productIds: number[]) {
+  if (!productIds.length) return [];
+  return db.select().from(variants).where(inArray(variants.productId, productIds)).orderBy(asc(variants.sortOrder), asc(variants.id));
+}
 
 export type SortKey = "default" | "new" | "price-asc" | "price-desc" | "name";
 export const PER_PAGE = 24;
@@ -157,7 +197,10 @@ async function toCards(rows: Product[]): Promise<ProductCard[]> {
     return c?.id ?? null;
   };
   const newSince = Date.now() - NEW_DAYS * 86_400_000;
+  const allVariants = await variantsOf(rows.map((r) => r.id));
   return rows.map((p) => {
+    const own = allVariants.filter((v) => v.productId === p.id);
+    const first = own.find((v) => v.inStock) ?? own[0];
     const best = links
       .filter((l) => l.productId === p.id)
       .sort((a, b) => depth(b.categoryId) - depth(a.categoryId))[0];
@@ -178,6 +221,8 @@ async function toCards(rows: Product[]): Promise<ProductCard[]> {
       category: best ? (all.find((c) => c.id === best.categoryId)?.name ?? null) : null,
       rootCategoryId: best ? rootOf(best.categoryId) : null,
       isNew: p.createdAt.getTime() > newSince,
+      variantCount: own.length,
+      defaultVariant: first ? resolveVariant(first, p) : null,
     };
   });
 }
@@ -203,31 +248,8 @@ export async function getProduct(slug: string) {
     ? (await getProducts({ categoryIds: [primary.id] })).items.filter((p) => p.id !== product.id).slice(0, 10)
     : [];
 
-  return { product, categories: linked, trail, related };
-}
-
-export type Variant = { id: number; slug: string; label: string; image: string | null; inStock: boolean };
-
-/** Products of the same collection (shades / variants), for the swatches on the product page. */
-export async function getVariants(collection: string) {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("products");
-  const rows = await db
-    .select({ id: products.id, slug: products.slug, name: products.name, shade: products.shade, images: products.images, inStock: products.inStock })
-    .from(products)
-    .where(and(eq(products.published, true), eq(products.collection, collection)))
-    .orderBy(asc(products.shade), asc(products.name));
-  return rows.map(
-    (r): Variant => ({
-      id: r.id,
-      slug: r.slug,
-      // The shade, or the part of the name after the collection ("Nail Rituals - Nail & Cuticle Oil" → "Nail & Cuticle Oil").
-      label: r.shade || r.name.replace(collection, "").replace(/^s*-s*/, "") || r.name,
-      image: r.images[0] ?? null,
-      inStock: r.inStock,
-    }),
-  );
+  const options = (await variantsOf([product.id])).map((v) => resolveVariant(v, product));
+  return { product, variants: options, categories: linked, trail, related };
 }
 
 /** Distinct brands and collections of published products, for the catalog filters. */

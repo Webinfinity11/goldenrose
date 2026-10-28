@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { eq } from "drizzle-orm";
-import { categories, db, productCategories, products } from "@/db";
+import { asc } from "drizzle-orm";
+import { categories, db, productCategories, products, variants } from "@/db";
 import { requireAdmin } from "@/lib/auth";
 import { productUrl } from "@/lib/format";
 import { PageTitle } from "@/components/admin/ui";
@@ -16,9 +17,10 @@ export default async function EditProduct({ params }: PageProps<"/admin/products
   const isNew = id === "new";
   const [product] = isNew ? [null] : await db.select().from(products).where(eq(products.id, Number(id) || 0));
   if (!isNew && !product) notFound();
-  const [cats, links] = await Promise.all([
+  const [cats, links, vars] = await Promise.all([
     db.select({ id: categories.id, name: categories.name, parentId: categories.parentId }).from(categories).orderBy(categories.sortOrder, categories.name),
     product ? db.select().from(productCategories).where(eq(productCategories.productId, product.id)) : [],
+    product ? db.select().from(variants).where(eq(variants.productId, product.id)).orderBy(asc(variants.sortOrder), asc(variants.id)) : [],
   ]);
 
   return (
@@ -37,7 +39,7 @@ export default async function EditProduct({ params }: PageProps<"/admin/products
         </Link>{" "}
         {product ? product.name : "ახალი პროდუქტი"}
       </PageTitle>
-      <ProductForm product={product} categories={cats} selected={links.map((l) => l.categoryId)} />
+      <ProductForm product={product} variants={vars} categories={cats} selected={links.map((l) => l.categoryId)} />
     </>
   );
 }

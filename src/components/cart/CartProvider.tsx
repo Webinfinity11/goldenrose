@@ -2,17 +2,21 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
-export type CartLine = {
+export type FavItem = {
   id: number;
   name: string;
   slug: string;
   price: number;
   image: string | null;
-  /** Stock limit when the shop tracks stock for this product. */
+  /** Stock limit when the shop tracks stock for this product (or variant). */
   max?: number;
-  qty: number;
 };
-export type FavItem = Omit<CartLine, "qty">;
+/** What goes into the cart: a product, optionally in one of its variants (shades). */
+export type CartItem = FavItem & { variantId?: number; variant?: string };
+/** key = product id, or "product-variant" for a variant, so two shades of one product are separate lines. */
+export type CartLine = CartItem & { key: string; qty: number };
+
+const lineKey = (i: CartItem) => (i.variantId ? `${i.id}-${i.variantId}` : String(i.id));
 
 type CartState = {
   lines: CartLine[];
@@ -21,9 +25,9 @@ type CartState = {
   total: number;
   drawerOpen: boolean;
   setDrawerOpen: (open: boolean) => void;
-  add: (item: FavItem, qty?: number) => void;
-  setQty: (id: number, qty: number) => void;
-  remove: (id: number) => void;
+  add: (item: CartItem, qty?: number) => void;
+  setQty: (key: string, qty: number) => void;
+  remove: (key: string) => void;
   clear: () => void;
   toggleFav: (item: FavItem) => void;
   isFav: (id: number) => boolean;
@@ -53,7 +57,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
-    setLines(read(CART_KEY, []));
+    setLines(read<CartLine[]>(CART_KEY, []).map((l) => ({ ...l, key: l.key ?? lineKey(l) })));
     setFavs(read(FAV_KEY, []));
     setLoaded(true);
   }, []);
@@ -74,11 +78,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clampQty = (n: number, max = MAX_QTY) => Math.min(max, MAX_QTY, Math.max(1, Math.floor(n) || 1));
 
-  const add = useCallback((item: FavItem, qty = 1) => {
+  const add = useCallback((item: CartItem, qty = 1) => {
+    const key = lineKey(item);
     setLines((ls) => {
-      const existing = ls.find((l) => l.id === item.id);
-      if (existing) return ls.map((l) => (l.id === item.id ? { ...l, ...item, qty: clampQty(l.qty + qty, item.max) } : l));
-      return [...ls, { ...item, qty: clampQty(qty, item.max) }];
+      const existing = ls.find((l) => l.key === key);
+      if (existing) return ls.map((l) => (l.key === key ? { ...l, ...item, qty: clampQty(l.qty + qty, item.max) } : l));
+      return [...ls, { ...item, key, qty: clampQty(qty, item.max) }];
     });
     setDrawerOpen(true);
   }, []);
@@ -92,8 +97,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       drawerOpen,
       setDrawerOpen,
       add,
-      setQty: (id, qty) => setLines((ls) => ls.map((l) => (l.id === id ? { ...l, qty: clampQty(qty, l.max) } : l))),
-      remove: (id) => setLines((ls) => ls.filter((l) => l.id !== id)),
+      setQty: (key, qty) => setLines((ls) => ls.map((l) => (l.key === key ? { ...l, qty: clampQty(qty, l.max) } : l))),
+      remove: (key) => setLines((ls) => ls.filter((l) => l.key !== key)),
       clear: () => setLines([]),
       toggleFav: (item) =>
         setFavs((fs) => (fs.some((f) => f.id === item.id) ? fs.filter((f) => f.id !== item.id) : [...fs, item])),
