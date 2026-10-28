@@ -149,3 +149,6 @@ body.has-overlay { overflow: hidden; }
 @media (max-width: 991px) {
   .header-actions .round-button { background: none; }
 }
+/* language dropdown opens over the category menu below it */
+.header-main { position: relative; z-index: 45; }
+.language-menu { z-index: 50; white-space: nowrap; border-radius: 6px; }
