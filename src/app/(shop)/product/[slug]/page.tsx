@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -8,7 +9,7 @@ import { ProductCard, StockLabel } from "@/components/ProductCard";
 import { ProductTabs } from "@/components/ProductTabs";
 import { RailScroller } from "@/components/RailScroller";
 import { getContent } from "@/lib/content";
-import { getAllSlugs, getProduct } from "@/lib/data";
+import { getAllSlugs, getProduct, getVariants } from "@/lib/data";
 import { categoryUrl, discount, finalPrice, gelAmount, oldSlugRedirect, productUrl } from "@/lib/format";
 import { site } from "@/lib/site";
 
@@ -34,6 +35,8 @@ async function ProductContent({ params }: PageProps<"/product/[slug]">) {
   const [data, { delivery }] = await Promise.all([getProduct(await slugOf(params)), getContent()]);
   if (!data) return oldSlugRedirect(await slugOf(params), productUrl);
   const { product, trail, categories, related } = data;
+  const variants = product.collection ? await getVariants(product.collection) : [];
+  const current = variants.find((v) => v.id === product.id);
   const price = finalPrice(product);
   const off = discount(product);
   const item = { id: product.id, name: product.name, slug: product.slug, price, image: product.images[0] ?? null, max: product.stockQty ?? undefined };
@@ -108,6 +111,30 @@ async function ProductContent({ params }: PageProps<"/product/[slug]">) {
               </>
             )}
           </div>
+          {variants.length > 1 && current && (
+            <div className="pdp-variants">
+              <div className="pdp-variants-head">
+                <span>
+                  <b>{product.shade ? "Color" : "Variant"}:</b> {current.label}
+                </span>
+                <Link href={`/catalog?collection=${encodeURIComponent(product.collection!)}`}>Show All Colors</Link>
+              </div>
+              <div className="pdp-variants-list">
+                {variants.map((v) => (
+                  <Link
+                    key={v.id}
+                    href={productUrl(v.slug)}
+                    className={v.id === product.id ? "pdp-variant is-current" : v.inStock ? "pdp-variant" : "pdp-variant is-out"}
+                    aria-current={v.id === product.id ? "page" : undefined}
+                    title={v.label}
+                  >
+                    <span className="pdp-variant-img">{v.image && <Image src={v.image} alt="" width={70} height={90} />}</span>
+                    <span className="pdp-variant-label">{v.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
           {product.inStock && (
             <div className="pdp-buy">
               <AddToCart item={item} size="lg" />

@@ -2,7 +2,7 @@
   {
     "name": "Nail Rituals - Nail & Cuticle Oil",
     "collection": "Nail Rituals",
-    "shade": null,
+    "shade": "001-Nutrition Oil",
     "category": "Nail Care",
     "price": 23,
     "salePrice": null,
@@ -17,7 +17,7 @@
   {
     "name": "Nail Rituals - Smoothing Nail & Cuticle Scrub",
     "collection": "Nail Rituals",
-    "shade": null,
+    "shade": "002-Berry Glow Scrub",
     "category": "Nail Care",
     "price": 23,
     "salePrice": null,
@@ -32,7 +32,7 @@
   {
     "name": "Nail Rituals - Smoothing & Leveling Nail Foundation",
     "collection": "Nail Rituals",
-    "shade": null,
+    "shade": "003-Nail Foundation",
     "category": "Nail Care",
     "price": 23,
     "salePrice": null,
@@ -47,7 +47,7 @@
   {
     "name": "Nail Rituals - Nail Hardener & Strengthener",
     "collection": "Nail Rituals",
-    "shade": null,
+    "shade": "004-Extreme Nail Hardener",
     "category": "Nail Care",
     "price": 23,
     "salePrice": null,
@@ -62,7 +62,7 @@
   {
     "name": "Nail Rituals - Nourishing & Protective Nail Coat",
     "collection": "Nail Rituals",
-    "shade": null,
+    "shade": "005-All-In-One Booster",
     "category": "Nail Care",
     "price": 23,
     "salePrice": null,

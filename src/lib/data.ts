@@ -206,6 +206,30 @@ export async function getProduct(slug: string) {
   return { product, categories: linked, trail, related };
 }
 
+export type Variant = { id: number; slug: string; label: string; image: string | null; inStock: boolean };
+
+/** Products of the same collection (shades / variants), for the swatches on the product page. */
+export async function getVariants(collection: string) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("products");
+  const rows = await db
+    .select({ id: products.id, slug: products.slug, name: products.name, shade: products.shade, images: products.images, inStock: products.inStock })
+    .from(products)
+    .where(and(eq(products.published, true), eq(products.collection, collection)))
+    .orderBy(asc(products.shade), asc(products.name));
+  return rows.map(
+    (r): Variant => ({
+      id: r.id,
+      slug: r.slug,
+      // The shade, or the part of the name after the collection ("Nail Rituals - Nail & Cuticle Oil" → "Nail & Cuticle Oil").
+      label: r.shade || r.name.replace(collection, "").replace(/^s*-s*/, "") || r.name,
+      image: r.images[0] ?? null,
+      inStock: r.inStock,
+    }),
+  );
+}
+
 /** Distinct brands and collections of published products, for the catalog filters. */
 export async function getFilterOptions() {
   "use cache";
