@@ -157,3 +157,14 @@ body.has-overlay { overflow: hidden; }
 .whatsapp-button svg { width: 28px; height: 28px; }
 @media (max-width: 991px) { .whatsapp-button { width: 48px; height: 48px; } .whatsapp-button svg { width: 25px; height: 25px; } }
 @media (max-width: 600px) { .whatsapp-button { width: 46px; height: 46px; bottom: 65px; } }
+
+/* mood panels: three items visible, the rest behind the arrows (as on the original site) */
+.mood-panel .carousel { margin-top: 50px; }
+.mood-panel .mood-items { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 30px) / 3); grid-template-columns: none; gap: 15px; margin-top: 0; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; scroll-behavior: smooth; }
+.mood-panel .mood-items::-webkit-scrollbar { display: none; }
+.mood-panel .mood-items > a { scroll-snap-align: start; }
+.mood-panel .carousel-arrow { top: 50%; transform: translateY(-50%); box-shadow: 0 1px 4px #0001; }
+.mood-panel .carousel-arrow.prev { left: 0; }
+.mood-panel .carousel-arrow.next { right: 0; }
+.mood-panel .carousel { padding-inline: 20px; }
+@media (max-width: 991px) { .mood-panel .carousel { margin-top: 30px; } .mood-panel .mood-items { gap: 8px; grid-auto-columns: calc((100% - 16px) / 3); } }

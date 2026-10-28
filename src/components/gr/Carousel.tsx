@@ -8,11 +8,14 @@ export function Carousel({
   children,
   columns,
   story,
+  trackClass,
   label = "products",
 }: {
   children: ReactNode;
   columns?: number;
   story?: boolean;
+  /** Class of the scrolling row, when it is not a product or story track. */
+  trackClass?: string;
   label?: string;
 }) {
   const track = useRef<HTMLDivElement>(null);
@@ -30,7 +33,7 @@ export function Carousel({
       <button type="button" className="carousel-arrow prev" onClick={() => slide(-1)} aria-label={`Previous ${label}`}>
         <GrIcon name="prev" size={size} />
       </button>
-      <div ref={track} className={story ? "story-track" : "product-track"}>
+      <div ref={track} className={trackClass ?? (story ? "story-track" : "product-track")}>
         {children}
       </div>
       <button type="button" className="carousel-arrow next" onClick={() => slide(1)} aria-label={`Next ${label}`}>

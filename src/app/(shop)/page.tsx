@@ -90,11 +90,16 @@ const moodLips: [string, string, string][] = [
   ["r-sat-06-1-tr-1.png", "Mood Satiny", "Mood Satiny Matte Lipstick"],
   ["r-spa-153-1-tr-4.png", "Mood Sparkle Bright Lipstick", "Mood Sparkle Bright Lipstick"],
   ["r-she-102-1-tr-3.png", "Mood Sheer", "Mood Sheer Bright Lipstick"],
+  ["k-mdl-07-1-tr-2.png", "Dream Lips Lipliner", ""],
 ];
 const moodEyes: [string, string, string][] = [
   ["k-gte-106-1-tr-7.png", "Tattoo Gel Eyepencil", "eye-pencil"],
   ["p-sce-m03-1-tr-3.png", "Soft Color Matte Mono Eyeshadow", "eyeshadow"],
   ["k-lmw-207-1-tr-2.png", "Liner Matic Waterproof Eyepencil", "eye-pencil"],
+  ["p-sce-p44-1-tr-6.png", "Soft Color Pearl Mono Eyeshadow", "eyeshadow"],
+  ["p-sge-54-2-tr-1.png", "Sparkle Glow", "eyeshadow"],
+  ["m-fle-104-01-tr-5.png", "Flash Liner Colored Eyeliner", "eyeliner"],
+  ["m-flm-010-01-tr-4.png", "Flash Lash Colored Mascara", "colored-mascara"],
 ];
 
 const reels = [
@@ -241,7 +246,7 @@ export default async function HomePage() {
         <Products items={eyeGlaze.items} columns={5} />
       </div>
       <section className="container mood-grid">
-        <MoodPanel color="pink" title={home.moodLipTitle} text={home.moodLipText} items={moodLips.map(([s, n, c]) => [s, n, collection(c)])} />
+        <MoodPanel color="pink" title={home.moodLipTitle} text={home.moodLipText} items={moodLips.map(([s, n, c]) => [s, n, c ? collection(c) : cat("lip-liner")])} />
         <MoodPanel color="blue" title={home.moodEyeTitle} text={home.moodEyeText} items={moodEyes.map(([s, n, c]) => [s, n, cat(c)])} />
       </section>
       {site.instagram && (
@@ -296,14 +301,14 @@ function MoodPanel({ color, title, text, items }: { color: string; title: string
     <section className={`mood-panel ${color}`}>
       <h2 className="block-title">{title}</h2>
       <p>{text}</p>
-      <div className="mood-items">
+      <Carousel trackClass="mood-items" label="products">
         {items.map(([src, name, href]) => (
           <Link key={src} href={href}>
-            <Image src={img(src)} alt={name} width={300} height={520} sizes="(max-width: 600px) 30vw, 200px" />
+            <Image src={img(src)} alt={name} width={300} height={450} sizes="(max-width: 600px) 30vw, 200px" />
             <span>{name}</span>
           </Link>
         ))}
-      </div>
+      </Carousel>
     </section>
   );
 }
