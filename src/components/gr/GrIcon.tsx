@@ -13,7 +13,6 @@ const paths = {
       <path d="M2.5 3.5H5l3 12h11l2-8H6" />
       <circle cx="9" cy="20" r="1" />
       <circle cx="18" cy="20" r="1" />
-      <path d="M12 3v7m-3-3.5h6" />
     </>
   ),
   prev: <path d="m14 5-7 7 7 7" />,
