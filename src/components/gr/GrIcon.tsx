@@ -20,6 +20,13 @@ const paths = {
   arrow: <path d="M3 12h18m-6-6 6 6-6 6" />,
   play: <path d="m9 5 11 7-11 7V5Z" />,
   up: <path d="m6 14 6-6 6 6" />,
+  down: <path d="m7 9 5 5 5-5" />,
+  user: (
+    <>
+      <circle cx="12" cy="7.5" r="3.7" />
+      <path d="M4.8 21v-2.6a7.2 7.2 0 0 1 14.4 0V21" />
+    </>
+  ),
   close: <path d="M6 6l12 12M18 6 6 18" />,
 };
 

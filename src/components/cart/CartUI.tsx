@@ -82,19 +82,50 @@ export function CardAddButton({ item }: { item: FavItem }) {
   );
 }
 
+/** Right side of the header: language, account, favourites and cart, as in the design. */
 export function HeaderCounters() {
-  const { count, favs, setDrawerOpen } = useCart();
+  const { count, favs, setDrawerOpen, notify } = useCart();
   return (
     <div className="header-actions">
-      <Link className="icon-button" href="/favorites" aria-label="My favorites">
-        <GrIcon name="heart" />
+      <div className="language-wrap">
+        <button type="button" className="language-button" aria-label="Language and currency">
+          EN − GEL <GrIcon name="down" size={12} />
+          <UsFlag />
+        </button>
+        <div className="language-menu">English · Georgian Lari (₾)</div>
+      </div>
+      <button
+        type="button"
+        className="account-button"
+        onClick={() => notify("Customer accounts are coming soon. You can already order without registering.")}
+      >
+        <GrIcon name="user" size={18} />
+        <span>Login / Register</span>
+      </button>
+      <Link className="icon-button round-button" href="/favorites" aria-label="My favorites">
+        <GrIcon name="heart" size={18} />
         {favs.length > 0 && <span className="count-badge">{favs.length}</span>}
       </Link>
-      <button className="icon-button basket-button" onClick={() => setDrawerOpen(true)} aria-label={`My cart: ${count} items`}>
-        <GrIcon name="basket" size={25} />
+      <button className="icon-button round-button basket-button" onClick={() => setDrawerOpen(true)} aria-label={`My cart: ${count} items`}>
+        <GrIcon name="basket" size={19} />
         <span className="count-badge">{count}</span>
       </button>
     </div>
+  );
+}
+
+function UsFlag() {
+  return (
+    <svg className="flag" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <clipPath id="flag-circle">
+        <circle cx="8" cy="8" r="8" />
+      </clipPath>
+      <g clipPath="url(#flag-circle)">
+        <rect width="16" height="16" fill="#fff" />
+        {[0, 2, 4, 6, 8, 10, 12, 14].map((y, i) => i % 2 === 0 && <rect key={y} y={y * 1.14} width="16" height="1.23" fill="#d22f3c" />)}
+        <rect width="8" height="8.6" fill="#22408c" />
+      </g>
+    </svg>
   );
 }
 
