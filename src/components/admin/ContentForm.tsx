@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import type { FieldSpec } from "@/lib/content-schema";
 import { resetContent, saveContent } from "@/lib/actions/admin";
 import { Button, Card, Field, inputCls } from "./ui";
+import { ImageUploader } from "./ImageUploader";
 
 type Value = Record<string, unknown>;
 type Row = Record<string, string>;
@@ -117,17 +118,29 @@ function FieldEditor({ spec, value, onChange }: { spec: FieldSpec; value: unknow
       onAdd={() => onChange([...rows, Object.fromEntries(spec.fields.map((f) => [f.name, ""]))])}
       onRemove={(i) => onChange(rows.filter((_, j) => j !== i))}
       onMove={(i, d) => onChange(move(rows, i, d))}
-      render={(i) => (
-        <div className={`grid gap-2 ${spec.fields.some((f) => f.long) ? "" : "sm:grid-cols-2"}`}>
-          {spec.fields.map((f) =>
-            f.long ? (
+      render={(i) => {
+        const img = spec.fields.find((f) => f.image);
+        const rest = spec.fields.filter((f) => !f.image);
+        const inputs = (
+          <div className={`grid gap-2 ${rest.some((f) => f.long) || img ? "" : "sm:grid-cols-2"}`}>
+            {rest.map((f) =>
+              f.long ? (
               <textarea key={f.name} placeholder={f.label} value={rows[i][f.name] ?? ""} rows={3} onChange={(e) => update(i, f.name, e.target.value)} className={inputCls} />
-            ) : (
-              <input key={f.name} placeholder={f.label} value={rows[i][f.name] ?? ""} onChange={(e) => update(i, f.name, e.target.value)} className={inputCls} />
-            ),
-          )}
-        </div>
-      )}
+              ) : (
+                <input key={f.name} placeholder={f.label} value={rows[i][f.name] ?? ""} onChange={(e) => update(i, f.name, e.target.value)} className={inputCls} />
+              ),
+            )}
+          </div>
+        );
+        if (!img) return inputs;
+        const url = rows[i][img.name] ?? "";
+        return (
+          <div className="grid sm:grid-cols-[200px_1fr] gap-3 items-start">
+            <ImageUploader value={url ? [url] : []} onChange={(urls) => update(i, img.name, urls.at(-1) ?? "")} max={1} single />
+            {inputs}
+          </div>
+        );
+      }}
     />
   );
 }

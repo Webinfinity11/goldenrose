@@ -7,45 +7,46 @@ import { GrIcon } from "@/components/gr/GrIcon";
 import { FoundationFinder } from "@/components/home/FoundationFinder";
 import { expandVariants, getCategory, getProducts, type ProductCard as Card } from "@/lib/data";
 import { getContent } from "@/lib/content";
-import { categoryUrl } from "@/lib/format";
+import type { Banner } from "@/lib/content-schema";
 
-const img = (f: string) => `/img/gr/${f}`;
-const cat = categoryUrl;
-const collection = (name: string) => `/catalog?collection=${encodeURIComponent(name)}`;
+// Banners, stories, mood items and carousel sources are edited in /admin/content → "მთავარი გვერდი: ბანერები და ფოტოები".
+// The sizes below are the design's picture sizes; next/image keeps each picture's own aspect ratio.
+type Size = { w: number; h: number };
+const external = (href: string) => /^https?:\/\//.test(href);
 
-type Banner = { src: string; w: number; h: number; alt: string; href: string };
-const external = (href: string) => href.startsWith("http");
-
-function Campaign({ b, sizes, priority }: { b: Banner; sizes: string; priority?: boolean }) {
-  const image = <Image src={img(b.src)} width={b.w} height={b.h} alt={b.alt} sizes={sizes} priority={priority} />;
-  return external(b.href) ? (
-    <a className="campaign" href={b.href} target="_blank" rel="noopener noreferrer" aria-label={b.alt}>
+function Campaign({ b, size, sizes, priority }: { b: Banner; size: Size; sizes: string; priority?: boolean }) {
+  if (!b.image) return null;
+  const image = <Image src={b.image} width={size.w} height={size.h} alt={b.title} sizes={sizes} priority={priority} />;
+  const href = b.href || "/catalog";
+  return external(href) ? (
+    <a className="campaign" href={href} target="_blank" rel="noopener noreferrer" aria-label={b.title}>
       {image}
     </a>
   ) : (
-    <Link className="campaign" href={b.href} aria-label={b.alt}>
+    <Link className="campaign" href={href} aria-label={b.title}>
       {image}
     </Link>
   );
 }
 
-function Grid({ items, cols, className, label }: { items: Banner[]; cols: "two" | "three" | "four"; className: string; label: string }) {
+function Grid({ items, cols, size, className, label }: { items: Banner[]; cols: "two" | "three" | "four"; size: Size; className: string; label: string }) {
+  if (!items.length) return null;
   const sizes = { two: "(max-width: 600px) 100vw, 720px", three: "(max-width: 600px) 33vw, 480px", four: "(max-width: 600px) 50vw, 360px" }[cols];
   return (
     <section className={`container campaign-grid ${cols} ${className}`} aria-label={label}>
       {items.map((b, i) => (
-        <Campaign key={b.src} b={b} sizes={sizes} priority={className.includes("opening") && i < 2} />
+        <Campaign key={b.image + i} b={b} size={size} sizes={sizes} priority={className.includes("opening") && i < 2} />
       ))}
     </section>
   );
 }
 
-function FullBanner({ b, className = "" }: { b: Banner; className?: string }) {
-  return (
-    <div className={`full-banner ${className}`}>
-      <Campaign b={b} sizes="100vw" />
+function FullBanner({ items, size, className = "" }: { items: Banner[]; size: Size; className?: string }) {
+  return items.slice(0, 1).map((b) => (
+    <div key={b.image} className={`full-banner ${className}`}>
+      <Campaign b={b} size={size} sizes="100vw" />
     </div>
-  );
+  ));
 }
 
 function Products({ title, items, columns }: { title?: string; items: Card[]; columns: number }) {
@@ -55,204 +56,89 @@ function Products({ title, items, columns }: { title?: string; items: Card[]; co
       {title && <h2 className="block-title">{title}</h2>}
       <Carousel columns={columns}>
         {items.map((p) => (
-          <ProductCard key={p.id} p={p} />
+          <ProductCard key={`${p.id}-${p.defaultVariant?.id ?? ""}`} p={p} />
         ))}
       </Carousel>
     </section>
   );
 }
 
-const stories: [string, string, string][] = [
-  ["g1-tr-18.jpg", "Lash Tubing Mascara", "mascara"],
-  ["sp-webstory-tr-22.jpg", "Skin Perfector CC Light Foundation", "foundation"],
-  ["lbb-webstory-tr-21.jpg", "Lip Butter Balm Care&Gloss", "lip-gloss"],
-  ["website-story-gorsel-talebi6-tr-14.jpg", "Max Hold Brow Glue", "brows"],
-  ["g2-tr-19.jpg", "Silky Shine Hydrating Lipstick", "lipstick"],
-  ["gp-webstory-tr-20.jpg", "Gel Power Nail Lacquer", "nail-polish"],
-  ["website-story-gorsel-talebi13-tr-11.jpg", "Sweet Kiss Lip Oil Gloss", "lip-oil"],
-  ["website-story-gorsel-talebi4-tr-12.jpg", "Iconic Lash Intense Mascara", "mascara"],
-  ["website-story-gorsel-talebi7-tr-13.jpg", "Pure Matte Powder Lipstick", "lipstick"],
-  ["1-4--1-tr.jpg", "Smart Glow Liquid Highlighter", "highlighter"],
-  ["g3-tr-15.jpg", "BI-Phase Instant Make Up Remover", "face-care"],
-  ["mood-sparkle-bright-lipstick-154-violet-fizz-isiltili-ruj-tr-17.jpg", "Mood Sparkle Bright Lipstick", "lipstick"],
-  ["website-story-gorsel-talebi5-tr-16.jpg", "Make Up Primer", "primer-setting-spray"],
-  ["mood-shimmer-lip-glaze-lipgloss-254-berry-spark-isiltili-dudak-parlaticisi-tr-2.jpg", "Mood Shimmer Lip Glaze Lipgloss", "lip-gloss"],
-  ["mood-satiny-matte-lipstick-08-candy-red-mat-ruj-tr-3.jpg", "Mood Satiny Matte Lipstick", "lipstick"],
-  ["4-2--4-tr.jpg", "Glow Kiss Tinted Lip Balm", "lip-balm"],
-  ["5-5-tr.jpg", "Velvet Matte Lipstick", "lipstick"],
-  ["mood-gleamy-lip-glaze-lipgloss-203-rose-chic-renkli-dudak-parlaticisi-tr-6.jpg", "Mood Gleamy Lip Glaze Lipgloss", "lip-gloss"],
-  ["7-7-tr.jpg", "Flash Liner Colored Eyeliner", "eyeliner"],
-  ["mood-sheer-bright-lipstick-106-peachy-pink-parlak-ruj-tr-10.jpg", "Mood Sheer Bright Lipstick", "lipstick"],
-  ["8-8-tr.jpg", "Juicy Tint Lip & Cheek", "blush"],
-];
+const assuranceIcons = ["/img/gr/aa-1-tr.svg", "/img/gr/cas-2-tr.svg", "/img/gr/caa-3-tr.svg"];
 
-const moodLips: [string, string, string][] = [
-  ["r-sat-06-1-tr-1.png", "Mood Satiny", "Mood Satiny Matte Lipstick"],
-  ["r-spa-153-1-tr-4.png", "Mood Sparkle Bright Lipstick", "Mood Sparkle Bright Lipstick"],
-  ["r-she-102-1-tr-3.png", "Mood Sheer", "Mood Sheer Bright Lipstick"],
-  ["k-mdl-07-1-tr-2.png", "Dream Lips Lipliner", ""],
-];
-const moodEyes: [string, string, string][] = [
-  ["k-gte-106-1-tr-7.png", "Tattoo Gel Eyepencil", "eye-pencil"],
-  ["p-sce-m03-1-tr-3.png", "Soft Color Matte Mono Eyeshadow", "eyeshadow"],
-  ["k-lmw-207-1-tr-2.png", "Liner Matic Waterproof Eyepencil", "eye-pencil"],
-  ["p-sce-p44-1-tr-6.png", "Soft Color Pearl Mono Eyeshadow", "eyeshadow"],
-  ["p-sge-54-2-tr-1.png", "Sparkle Glow", "eyeshadow"],
-  ["m-fle-104-01-tr-5.png", "Flash Liner Colored Eyeliner", "eyeliner"],
-  ["m-flm-010-01-tr-4.png", "Flash Lash Colored Mascara", "colored-mascara"],
-];
-
-const reels = [
-  ["https://www.youtube.com/shorts/4TIVUaLw_kc", "sizden-gelenler-1-tr-1.jpg"],
-  ["https://www.youtube.com/shorts/9Ihm_ooFdVo", "sizden-gelenler-4-tr-2.jpg"],
-  ["https://www.youtube.com/shorts/i-8nHAb4s_A", "sizden-gelenler-2-tr-3.jpg"],
-  ["https://www.youtube.com/shorts/w98xE9XxllE", "sizden-gelenler-5-tr-4.jpg"],
-  ["https://www.youtube.com/shorts/E3bIanyZG9I", "sizden-gelenler-3-tr-5.jpg"],
-];
-
-const assuranceIcons = ["aa-1-tr.svg", "cas-2-tr.svg", "caa-3-tr.svg"];
+/** Products of a collection, one card per color; an empty name hides the block. */
+async function collectionCards(name: string) {
+  if (!name.trim()) return [];
+  return expandVariants((await getProducts({ collection: name.trim() })).items);
+}
 
 export default async function HomePage() {
   "use cache";
   cacheLife("hours");
 
-  const [{ home, site }, nails, newest, lipButter, brows, eyeGlaze, foundation] = await Promise.all([
-    getContent(),
-    getProducts({ collection: "Nail Rituals" }),
-    getProducts({ q: "Mood", sort: "new" }),
-    getProducts({ collection: "Lip Butter Balm Care&Gloss" }),
-    getProducts({ collection: "Max Hold Brow Glue" }),
-    getProducts({ collection: "Eye Glaze Liquid Eyeshadow" }),
-    getCategory("foundation"),
+  const [{ home, homeMedia: m, site }, foundation] = await Promise.all([getContent(), getCategory("foundation")]);
+  const [nails, newest, lipButter, brows, eyeGlaze, foundations] = await Promise.all([
+    collectionCards(m.nailCollection),
+    getProducts({ q: m.newSearch.trim() || undefined, sort: "new" }).then((r) => expandVariants(r.items)),
+    collectionCards(m.lipCollection),
+    collectionCards(m.browCollection),
+    collectionCards(m.eyeCollection),
+    foundation ? getProducts({ categoryIds: foundation.descendantIds }).then((r) => r.items) : [],
   ]);
-  const foundations = foundation ? (await getProducts({ categoryIds: foundation.descendantIds })).items : [];
-  // The carousels show every color as its own card, like the original site.
-  const [nailCards, newCards, lipCards, browCards, eyeCards] = await Promise.all(
-    [nails, newest, lipButter, brows, eyeGlaze].map((r) => expandVariants(r.items)),
-  );
 
   const socials = [
-    [site.instagram, "Instagram", "tr_img_1_1.svg"],
-    [site.youtube, "YouTube", "tr_img_1_2.svg"],
-    [site.facebook, "Facebook", "tr_img_1_5.svg"],
+    [site.instagram, "Instagram", "/img/gr/tr_img_1_1.svg"],
+    [site.youtube, "YouTube", "/img/gr/tr_img_1_2.svg"],
+    [site.facebook, "Facebook", "/img/gr/tr_img_1_5.svg"],
   ].filter(([href]) => href);
 
   return (
     <>
-      <Grid
-        cols="four"
-        className="opening-campaigns"
-        label="Campaigns"
-        items={[
-          { src: "ekimfavoriler-1-tr-1.jpg", w: 1536, h: 1024, alt: "Monthly Favorites", href: "/catalog" },
-          { src: "thinkpink-1-tr-1.jpg", w: 1536, h: 1024, alt: "Think Pink", href: cat("lips") },
-          { src: "50indirim-1-tr-1.jpg", w: 1536, h: 1024, alt: "50% Off", href: "/catalog?sale=1" },
-          { src: "nudemood-1-tr-1.jpg", w: 1536, h: 1024, alt: "Nude Mood", href: collection("Mood Satiny Matte Lipstick") },
-        ]}
-      />
-      <FullBanner b={{ src: "tubing-1920x200-1jpg-1-tr-1.jpg", w: 1920, h: 200, alt: "Longest Lash Tubing Mascara", href: cat("mascara") }} />
-      <Grid
-        cols="two"
-        className="spaced"
-        label="Longest Lash"
-        items={[
-          { src: "tubing-1-1-1-tr-1.jpg", w: 1260, h: 630, alt: "Legendary Length — False Lash Effect", href: cat("mascara") },
-          { src: "tubing-2-1-1-tr-1.jpg", w: 1260, h: 630, alt: "See how to apply Longest Lash", href: "https://www.youtube.com/watch?v=IM2HlD-Ds40" },
-        ]}
-      />
+      <Grid cols="four" className="opening-campaigns" label="Campaigns" items={m.opening} size={{ w: 1536, h: 1024 }} />
+      <FullBanner items={m.lashBanner} size={{ w: 1920, h: 200 }} />
+      <Grid cols="two" className="spaced" label="Longest Lash" items={m.lashPair} size={{ w: 1260, h: 630 }} />
       <div className="container standard-products">
-        <Products title={home.nailTitle} items={nailCards} columns={5} />
+        <Products title={home.nailTitle} items={nails.slice(0, 24)} columns={5} />
       </div>
-      <Grid
-        cols="two"
-        className="spaced"
-        label="Autumn favorites"
-        items={[
-          { src: "1200x628-7-1-tr-1.jpg", w: 1200, h: 628, alt: "Lip Butter Balm Care & Gloss", href: collection("Lip Butter Balm Care&Gloss") },
-          { src: "1200x628-6-1-tr-1.jpg", w: 1200, h: 628, alt: "Sweet Kiss Lip Oil Gloss", href: cat("lip-oil") },
-        ]}
-      />
-      <FullBanner b={{ src: "cc-1920x200-tr-1.jpg", w: 1920, h: 200, alt: "Skin Perfector CC Light Foundation", href: cat("foundation") }} />
-      <Grid
-        cols="two"
-        className="spaced"
-        label="Skin Perfector"
-        items={[
-          { src: "cc-1200x628-2-1-tr-1.jpg", w: 1200, h: 628, alt: "A Smooth, Radiant Look", href: cat("foundation") },
-          { src: "cc-1200x628-1-1-tr-1.jpg", w: 1200, h: 628, alt: "See how to apply Skin Perfector", href: "https://www.youtube.com/watch?v=tvaP9Ty0gfY" },
-        ]}
-      />
+      <Grid cols="two" className="spaced" label="Favorites" items={m.lipPair} size={{ w: 1200, h: 628 }} />
+      <FullBanner items={m.ccBanner} size={{ w: 1920, h: 200 }} />
+      <Grid cols="two" className="spaced" label="Skin Perfector" items={m.ccPair} size={{ w: 1200, h: 628 }} />
       <FoundationFinder
         eyebrow={home.finderEyebrow}
         title={home.finderTitle}
         text={home.finderText}
         foundations={foundations.map((f) => ({ name: f.name, slug: f.slug }))}
       />
-      <section className="container stories-section" aria-label="Discover the collections">
-        <Carousel story label="collections">
-          {stories.map(([src, name, slug]) => (
-            <Link key={src} className="story" href={cat(slug)}>
-              <div className="story-ring">
-                <Image src={img(src)} alt={name} width={140} height={140} sizes="140px" />
-              </div>
-              <span>{name}</span>
-            </Link>
-          ))}
-        </Carousel>
-      </section>
-      <FullBanner b={{ src: "baz-baslik-1-tr-1.jpg", w: 1920, h: 400, alt: "The Perfect Start to Your Makeup", href: cat("face") }} />
-      <Grid
-        cols="three"
-        className="spaced"
-        label="Smart Cheek and Smart Glow"
-        items={[
-          { src: "scg-1-1-1-tr-1.jpg", w: 900, h: 1200, alt: "Natural Look, Fresh Cheeks", href: cat("blush") },
-          { src: "scg-2-1-1-tr-1.jpg", w: 900, h: 1200, alt: "See how to apply Smart Cheek and Smart Glow", href: "https://www.youtube.com/watch?v=PgJqOqJyKMo" },
-          { src: "scg-3-1-1-tr-1.jpg", w: 900, h: 1200, alt: "A Natural, Radiant Glow", href: cat("highlighter") },
-        ]}
-      />
+      {m.stories.length > 0 && (
+        <section className="container stories-section" aria-label="Discover the collections">
+          <Carousel story label="collections">
+            {m.stories.map((s, i) => (
+              <Link key={s.image + i} className="story" href={s.href || "/catalog"}>
+                <div className="story-ring">{s.image && <Image src={s.image} alt={s.title} width={140} height={140} sizes="140px" />}</div>
+                <span>{s.title}</span>
+              </Link>
+            ))}
+          </Carousel>
+        </section>
+      )}
+      <FullBanner items={m.baseBanner} size={{ w: 1920, h: 400 }} />
+      <Grid cols="three" className="spaced" label="Smart Cheek and Smart Glow" items={m.cheekTrio} size={{ w: 900, h: 1200 }} />
       <div className="container new-products">
-        <Products title={home.newTitle} items={newCards} columns={4} />
+        <Products title={home.newTitle} items={newest.slice(0, 30)} columns={4} />
       </div>
-      <section className="container feature-grid">
-        <div className="feature-image">
-          <Campaign
-            b={{ src: "lbb-1080x1080-tr-1.jpg", w: 1080, h: 1080, alt: "Lip Butter Balm", href: collection("Lip Butter Balm Care&Gloss") }}
-            sizes="(max-width: 600px) 100vw, 600px"
-          />
+      <Feature banner={m.lipFeature[0]} size={{ w: 1080, h: 1080 }} title={home.lipTitle} items={lipButter} />
+      <Feature banner={m.browFeature[0]} size={{ w: 600, h: 600 }} title={home.browTitle} items={brows} />
+      <Grid cols="three" className="eye-campaigns" label="Eye Glaze" items={m.eyeTrio} size={{ w: 1200, h: 600 }} />
+      {eyeGlaze.length > 0 && (
+        <div className="container eye-products">
+          <Products items={eyeGlaze} columns={5} />
         </div>
-        <div className="feature-products">
-          <Products title={home.lipTitle} items={lipCards} columns={3} />
-        </div>
-      </section>
-      <section className="container feature-grid">
-        <div className="feature-image">
-          <Campaign
-            b={{ src: "adsiz-tasarim-36-tr-3.jpg", w: 600, h: 600, alt: "Max Hold Brow Glue", href: collection("Max Hold Brow Glue") }}
-            sizes="(max-width: 600px) 100vw, 600px"
-          />
-        </div>
-        <div className="feature-products">
-          <Products title={home.browTitle} items={browCards} columns={3} />
-        </div>
-      </section>
-      <Grid
-        cols="three"
-        className="eye-campaigns"
-        label="Eye Glaze"
-        items={[
-          { src: "eg-3-2-1-tr-1.jpg", w: 1200, h: 600, alt: "Wet-Look Shimmer", href: collection("Eye Glaze Liquid Eyeshadow") },
-          { src: "eg-1-3-1-tr-1.jpg", w: 1200, h: 600, alt: "The Glow Effect in Eye Makeup", href: "https://www.youtube.com/watch?v=-BHHZPu2aD0" },
-          { src: "eg-2-3-1-tr-1.jpg", w: 1200, h: 600, alt: "Discover the Formula of Radiant Eyes", href: collection("Eye Glaze Liquid Eyeshadow") },
-        ]}
-      />
-      <div className="container eye-products">
-        <Products items={eyeCards} columns={5} />
-      </div>
-      <section className="container mood-grid">
-        <MoodPanel color="pink" title={home.moodLipTitle} text={home.moodLipText} items={moodLips.map(([s, n, c]) => [s, n, c ? collection(c) : cat("lip-liner")])} />
-        <MoodPanel color="blue" title={home.moodEyeTitle} text={home.moodEyeText} items={moodEyes.map(([s, n, c]) => [s, n, cat(c)])} />
-      </section>
+      )}
+      {(m.moodLips.length > 0 || m.moodEyes.length > 0) && (
+        <section className="container mood-grid">
+          <MoodPanel color="pink" title={home.moodLipTitle} text={home.moodLipText} items={m.moodLips} />
+          <MoodPanel color="blue" title={home.moodEyeTitle} text={home.moodEyeText} items={m.moodEyes} />
+        </section>
+      )}
       {site.instagram && (
         <section className="instagram-invite">
           <h2 className="block-title">{home.instagramTitle}</h2>
@@ -269,47 +155,61 @@ export default async function HomePage() {
             <div className="social-icons">
               {socials.map(([href, label, icon]) => (
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
-                  <Image src={img(icon)} width={40} height={40} alt="" />
+                  <Image src={icon} width={40} height={40} alt="" />
                 </a>
               ))}
             </div>
           )}
           <div className="social-reels">
-            {reels.map(([href, src], i) => (
-              <a key={href} className="reel" href={href} target="_blank" rel="noopener noreferrer" aria-label={`Golden Rose beauty video ${i + 1}`}>
-                <Image src={img(src)} width={400} height={500} alt="Golden Rose makeup inspiration" sizes="(max-width: 600px) 44vw, 280px" />
-                <span className="reel-play">
-                  <GrIcon name="play" size={20} />
-                </span>
-              </a>
-            ))}
+            {m.reels.map((r, i) =>
+              r.image ? (
+                <a key={r.image + i} className="reel" href={r.href || site.instagram || "#"} target="_blank" rel="noopener noreferrer" aria-label={r.title}>
+                  <Image src={r.image} width={400} height={500} alt={r.title} sizes="(max-width: 600px) 44vw, 280px" />
+                  <span className="reel-play">
+                    <GrIcon name="play" size={20} />
+                  </span>
+                </a>
+              ) : null,
+            )}
           </div>
         </div>
       </section>
       <section className="assurance container">
         {home.assurance.slice(0, 3).map((a, i) => (
           <div key={i}>
-            <Image src={img(assuranceIcons[i])} alt="" width={24} height={24} />
+            <Image src={assuranceIcons[i]} alt="" width={24} height={24} />
             <strong>{a.title}</strong>
             <span>{a.text}</span>
           </div>
         ))}
       </section>
-      <FullBanner className="store-banner" b={{ src: "kioskbaslik-1-tr-1.jpg", w: 1920, h: 300, alt: "Discover Golden Rose Up Close", href: "/contact" }} />
+      <FullBanner className="store-banner" items={m.storeBanner} size={{ w: 1920, h: 300 }} />
     </>
   );
 }
 
-function MoodPanel({ color, title, text, items }: { color: string; title: string; text: string; items: string[][] }) {
+function Feature({ banner, size, title, items }: { banner?: Banner; size: Size; title: string; items: Card[] }) {
+  if (!banner?.image && !items.length) return null;
+  return (
+    <section className="container feature-grid">
+      <div className="feature-image">{banner && <Campaign b={banner} size={size} sizes="(max-width: 600px) 100vw, 600px" />}</div>
+      <div className="feature-products">
+        <Products title={title} items={items} columns={3} />
+      </div>
+    </section>
+  );
+}
+
+function MoodPanel({ color, title, text, items }: { color: string; title: string; text: string; items: Banner[] }) {
   return (
     <section className={`mood-panel ${color}`}>
       <h2 className="block-title">{title}</h2>
       <p>{text}</p>
       <Carousel trackClass="mood-items" label="products">
-        {items.map(([src, name, href]) => (
-          <Link key={src} href={href}>
-            <Image src={img(src)} alt={name} width={300} height={450} sizes="(max-width: 600px) 30vw, 200px" />
-            <span>{name}</span>
+        {items.map((b, i) => (
+          <Link key={b.image + i} href={b.href || "/catalog"}>
+            {b.image && <Image src={b.image} alt={b.title} width={300} height={450} sizes="(max-width: 600px) 30vw, 200px" />}
+            <span>{b.title}</span>
           </Link>
         ))}
       </Carousel>

@@ -167,8 +167,8 @@ export function ProductForm({
           <ImageUploader value={images} onChange={setImages} />
         </Card>
 
-        <Card title={`ვარიაციები / ფერები (${variants.length})`}>
-          <VariantsEditor value={variants} onChange={setVariants} />
+        <Card title={`ფერები / ვარიაციები (${variants.length})`}>
+          <VariantsEditor value={variants} onChange={setVariants} productImages={images} basePrice={price} />
         </Card>
 
         <Card title="აღწერა">
@@ -247,8 +247,8 @@ export function ProductForm({
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
-                checked={tracked ? Number(stockQty) > 0 : inStock}
-                disabled={tracked}
+                checked={variants.length ? variants.some((v) => (v.stockQty.trim() ? Number(v.stockQty) > 0 : v.inStock)) : tracked ? Number(stockQty) > 0 : inStock}
+                disabled={tracked || variants.length > 0}
                 onChange={(e) => setInStock(e.target.checked)}
                 className="h-4 w-4 accent-[#174abc]"
               />
@@ -267,6 +267,7 @@ export function ProductForm({
         </Card>
 
         <Card title="ფასი">
+          {variants.length > 0 && <p className="text-xs text-slate-500 mb-3">ფერებს, რომლებსაც საკუთარი ფასი არ აქვთ, ეს ფასი ექნებათ.</p>}
           <div className="grid grid-cols-2 gap-3">
             <Field label="ფასი ₾" hint="მაგ. 12.50">
               <input type="number" step="0.01" min="0" value={price} onChange={(e) => setPrice(e.target.value)} className={inputCls} />
@@ -277,16 +278,24 @@ export function ProductForm({
           </div>
         </Card>
 
-        <Card title="მარაგი">
-          <Field label="რაოდენობა მარაგში" hint="ცარიელი = არ ითვლება. შეკვეთისას ავტომატურად აკლდება.">
-            <input type="number" min="0" step="1" value={stockQty} onChange={(e) => setStockQty(e.target.value)} placeholder="არ ითვლება" className={inputCls} />
-          </Field>
-          {tracked && Number(stockQty) <= 5 && (
-            <p className={`text-sm mt-2 ${Number(stockQty) === 0 ? "text-red-600" : "text-amber-600"}`}>
-              {Number(stockQty) === 0 ? "ამოწურულია - საიტზე „არ არის მარაგში“" : "მცირე მარაგი - საიტზე ჩანს „დარჩა N ც.“"}
+        {variants.length > 0 ? (
+          <Card title="მარაგი">
+            <p className="text-sm text-slate-600">
+              მარაგი ფერების მიხედვით ითვლება („ფერები“ ბლოკში). პროდუქტი საიტზე „მარაგშია“, სანამ ერთი ფერი მაინც არის.
             </p>
-          )}
-        </Card>
+          </Card>
+        ) : (
+          <Card title="მარაგი">
+            <Field label="რაოდენობა მარაგში" hint="ცარიელი = არ ითვლება. შეკვეთისას ავტომატურად აკლდება.">
+              <input type="number" min="0" step="1" value={stockQty} onChange={(e) => setStockQty(e.target.value)} placeholder="არ ითვლება" className={inputCls} />
+            </Field>
+            {tracked && Number(stockQty) <= 5 && (
+              <p className={`text-sm mt-2 ${Number(stockQty) === 0 ? "text-red-600" : "text-amber-600"}`}>
+                {Number(stockQty) === 0 ? "ამოწურულია - საიტზე „არ არის მარაგში“" : "მცირე მარაგი - საიტზე ჩანს „დარჩა N ც.“"}
+              </p>
+            )}
+          </Card>
+        )}
 
         <Card title={`კატეგორიები (${cats.length})`}>
           <input placeholder="ფილტრი…" value={catFilter} onChange={(e) => setCatFilter(e.target.value)} className={`${inputCls} mb-2`} />

@@ -18,6 +18,7 @@ export async function getContent(): Promise<Content> {
 }
 
 const SAFE_HREF = /^(\/(?!\/)|https?:\/\/|tel:|mailto:)/i;
+const SAFE_IMAGE = /^(\/(?!\/)|https:\/\/)/i;
 
 /**
  * Coerces an edited section to the shape of its defaults: unknown keys are dropped,
@@ -49,6 +50,8 @@ export function sanitizeSection(key: ContentKey, input: unknown): Record<string,
             const clean: Record<string, string> = {};
             for (const k of keys) clean[k] = str(o[k]).trim();
             if ("href" in clean && clean.href && !SAFE_HREF.test(clean.href)) clean.href = "/";
+            // Pictures are site paths or uploads (https); anything else is dropped.
+            if ("image" in clean && clean.image && !SAFE_IMAGE.test(clean.image)) clean.image = "";
             return clean;
           })
           .filter((o) => Object.values(o).some(Boolean));

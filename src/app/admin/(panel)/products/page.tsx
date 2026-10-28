@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { and, desc, eq, ilike, inArray, or, sql, type SQL } from "drizzle-orm";
-import { categories, db, productCategories, products } from "@/db";
+import { categories, db, productCategories, products, variants } from "@/db";
 import { requireAdmin } from "@/lib/auth";
 import { money } from "@/lib/format";
 import { Button, PageTitle, inputCls } from "@/components/admin/ui";
@@ -45,6 +45,14 @@ export default async function ProductsAdmin({ searchParams }: PageProps<"/admin/
     db.select({ id: categories.id, name: categories.name, parentId: categories.parentId }).from(categories).orderBy(categories.name),
   ]);
   const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  const colorRows = rows.length
+    ? await db
+        .select({ productId: variants.productId, n: sql<number>`count(*)::int` })
+        .from(variants)
+        .where(inArray(variants.productId, rows.map((r) => r.id)))
+        .groupBy(variants.productId)
+    : [];
+  const colors = new Map(colorRows.map((c) => [c.productId, c.n]));
   const link = (patch: Record<string, string | number>) => {
     const p = new URLSearchParams(Object.entries({ ...sp, ...patch }).filter(([, v]) => v !== "" && v !== undefined && v !== 0) as [string, string][]);
     return `/admin/products?${p}`;
@@ -119,6 +127,7 @@ export default async function ProductsAdmin({ searchParams }: PageProps<"/admin/
                   <Link href={`/admin/products/${p.id}`} className="font-semibold hover:text-[#174abc]">
                     {p.name}
                   </Link>
+                  {colors.get(p.id) ? <span className="ml-2 text-xs rounded-full bg-pink-50 text-pink-700 px-2 py-0.5">{colors.get(p.id)} ფერი</span> : null}
                 </td>
                 <td className="p-3 text-slate-500">{p.sku}</td>
                 <td className="p-3 text-right whitespace-nowrap">

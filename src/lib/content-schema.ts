@@ -3,6 +3,8 @@
 // Contacts and texts below are placeholders: edit them in /admin/content or replace here.
 
 export type Link = { label: string; href: string };
+/** A picture with a link: banners, stories, mood items. */
+export type Banner = { image: string; title: string; href: string };
 
 export const contentDefaults = {
   site: {
@@ -65,6 +67,104 @@ export const contentDefaults = {
       { title: "FAST DELIVERY", text: "Your order delivered safely to your door" },
     ],
   },
+  homeMedia: {
+    opening: [
+      { image: "/img/gr/ekimfavoriler-1-tr-1.jpg", title: "Monthly Favorites", href: "/catalog" },
+      { image: "/img/gr/thinkpink-1-tr-1.jpg", title: "Think Pink", href: "/category/lips" },
+      { image: "/img/gr/50indirim-1-tr-1.jpg", title: "50% Off", href: "/catalog?sale=1" },
+      { image: "/img/gr/nudemood-1-tr-1.jpg", title: "Nude Mood", href: "/catalog?collection=Mood%20Satiny%20Matte%20Lipstick" },
+    ] as Banner[],
+    lashBanner: [
+      { image: "/img/gr/tubing-1920x200-1jpg-1-tr-1.jpg", title: "Longest Lash Tubing Mascara", href: "/category/mascara" },
+    ] as Banner[],
+    lashPair: [
+      { image: "/img/gr/tubing-1-1-1-tr-1.jpg", title: "Legendary Length — False Lash Effect", href: "/category/mascara" },
+      { image: "/img/gr/tubing-2-1-1-tr-1.jpg", title: "See how to apply Longest Lash", href: "https://www.youtube.com/watch?v=IM2HlD-Ds40" },
+    ] as Banner[],
+    nailCollection: "Nail Rituals",
+    lipPair: [
+      { image: "/img/gr/1200x628-7-1-tr-1.jpg", title: "Lip Butter Balm Care & Gloss", href: "/catalog?collection=Lip%20Butter%20Balm%20Care%26Gloss" },
+      { image: "/img/gr/1200x628-6-1-tr-1.jpg", title: "Sweet Kiss Lip Oil Gloss", href: "/category/lip-oil" },
+    ] as Banner[],
+    ccBanner: [
+      { image: "/img/gr/cc-1920x200-tr-1.jpg", title: "Skin Perfector CC Light Foundation", href: "/category/foundation" },
+    ] as Banner[],
+    ccPair: [
+      { image: "/img/gr/cc-1200x628-2-1-tr-1.jpg", title: "A Smooth, Radiant Look", href: "/category/foundation" },
+      { image: "/img/gr/cc-1200x628-1-1-tr-1.jpg", title: "See how to apply Skin Perfector", href: "https://www.youtube.com/watch?v=tvaP9Ty0gfY" },
+    ] as Banner[],
+    stories: [
+      { image: "/img/gr/g1-tr-18.jpg", title: "Lash Tubing Mascara", href: "/category/mascara" },
+      { image: "/img/gr/sp-webstory-tr-22.jpg", title: "Skin Perfector CC Light Foundation", href: "/category/foundation" },
+      { image: "/img/gr/lbb-webstory-tr-21.jpg", title: "Lip Butter Balm Care&Gloss", href: "/category/lip-gloss" },
+      { image: "/img/gr/website-story-gorsel-talebi6-tr-14.jpg", title: "Max Hold Brow Glue", href: "/category/brows" },
+      { image: "/img/gr/g2-tr-19.jpg", title: "Silky Shine Hydrating Lipstick", href: "/category/lipstick" },
+      { image: "/img/gr/gp-webstory-tr-20.jpg", title: "Gel Power Nail Lacquer", href: "/category/nail-polish" },
+      { image: "/img/gr/website-story-gorsel-talebi13-tr-11.jpg", title: "Sweet Kiss Lip Oil Gloss", href: "/category/lip-oil" },
+      { image: "/img/gr/website-story-gorsel-talebi4-tr-12.jpg", title: "Iconic Lash Intense Mascara", href: "/category/mascara" },
+      { image: "/img/gr/website-story-gorsel-talebi7-tr-13.jpg", title: "Pure Matte Powder Lipstick", href: "/category/lipstick" },
+      { image: "/img/gr/1-4--1-tr.jpg", title: "Smart Glow Liquid Highlighter", href: "/category/highlighter" },
+      { image: "/img/gr/g3-tr-15.jpg", title: "BI-Phase Instant Make Up Remover", href: "/category/face-care" },
+      { image: "/img/gr/mood-sparkle-bright-lipstick-154-violet-fizz-isiltili-ruj-tr-17.jpg", title: "Mood Sparkle Bright Lipstick", href: "/category/lipstick" },
+      { image: "/img/gr/website-story-gorsel-talebi5-tr-16.jpg", title: "Make Up Primer", href: "/category/primer-setting-spray" },
+      { image: "/img/gr/mood-shimmer-lip-glaze-lipgloss-254-berry-spark-isiltili-dudak-parlaticisi-tr-2.jpg", title: "Mood Shimmer Lip Glaze Lipgloss", href: "/category/lip-gloss" },
+      { image: "/img/gr/mood-satiny-matte-lipstick-08-candy-red-mat-ruj-tr-3.jpg", title: "Mood Satiny Matte Lipstick", href: "/category/lipstick" },
+      { image: "/img/gr/4-2--4-tr.jpg", title: "Glow Kiss Tinted Lip Balm", href: "/category/lip-balm" },
+      { image: "/img/gr/5-5-tr.jpg", title: "Velvet Matte Lipstick", href: "/category/lipstick" },
+      { image: "/img/gr/mood-gleamy-lip-glaze-lipgloss-203-rose-chic-renkli-dudak-parlaticisi-tr-6.jpg", title: "Mood Gleamy Lip Glaze Lipgloss", href: "/category/lip-gloss" },
+      { image: "/img/gr/7-7-tr.jpg", title: "Flash Liner Colored Eyeliner", href: "/category/eyeliner" },
+      { image: "/img/gr/mood-sheer-bright-lipstick-106-peachy-pink-parlak-ruj-tr-10.jpg", title: "Mood Sheer Bright Lipstick", href: "/category/lipstick" },
+      { image: "/img/gr/8-8-tr.jpg", title: "Juicy Tint Lip & Cheek", href: "/category/blush" },
+    ] as Banner[],
+    baseBanner: [
+      { image: "/img/gr/baz-baslik-1-tr-1.jpg", title: "The Perfect Start to Your Makeup", href: "/category/face" },
+    ] as Banner[],
+    cheekTrio: [
+      { image: "/img/gr/scg-1-1-1-tr-1.jpg", title: "Natural Look, Fresh Cheeks", href: "/category/blush" },
+      { image: "/img/gr/scg-2-1-1-tr-1.jpg", title: "See how to apply Smart Cheek and Smart Glow", href: "https://www.youtube.com/watch?v=PgJqOqJyKMo" },
+      { image: "/img/gr/scg-3-1-1-tr-1.jpg", title: "A Natural, Radiant Glow", href: "/category/highlighter" },
+    ] as Banner[],
+    newSearch: "Mood",
+    lipFeature: [
+      { image: "/img/gr/lbb-1080x1080-tr-1.jpg", title: "Lip Butter Balm", href: "/catalog?collection=Lip%20Butter%20Balm%20Care%26Gloss" },
+    ] as Banner[],
+    lipCollection: "Lip Butter Balm Care&Gloss",
+    browFeature: [
+      { image: "/img/gr/adsiz-tasarim-36-tr-3.jpg", title: "Max Hold Brow Glue", href: "/catalog?collection=Max%20Hold%20Brow%20Glue" },
+    ] as Banner[],
+    browCollection: "Max Hold Brow Glue",
+    eyeTrio: [
+      { image: "/img/gr/eg-3-2-1-tr-1.jpg", title: "Wet-Look Shimmer", href: "/catalog?collection=Eye%20Glaze%20Liquid%20Eyeshadow" },
+      { image: "/img/gr/eg-1-3-1-tr-1.jpg", title: "The Glow Effect in Eye Makeup", href: "https://www.youtube.com/watch?v=-BHHZPu2aD0" },
+      { image: "/img/gr/eg-2-3-1-tr-1.jpg", title: "Discover the Formula of Radiant Eyes", href: "/catalog?collection=Eye%20Glaze%20Liquid%20Eyeshadow" },
+    ] as Banner[],
+    eyeCollection: "Eye Glaze Liquid Eyeshadow",
+    moodLips: [
+      { image: "/img/gr/r-sat-06-1-tr-1.png", title: "Mood Satiny", href: "/catalog?collection=Mood%20Satiny%20Matte%20Lipstick" },
+      { image: "/img/gr/r-spa-153-1-tr-4.png", title: "Mood Sparkle Bright Lipstick", href: "/catalog?collection=Mood%20Sparkle%20Bright%20Lipstick" },
+      { image: "/img/gr/r-she-102-1-tr-3.png", title: "Mood Sheer", href: "/catalog?collection=Mood%20Sheer%20Bright%20Lipstick" },
+      { image: "/img/gr/k-mdl-07-1-tr-2.png", title: "Dream Lips Lipliner", href: "/category/lip-liner" },
+    ] as Banner[],
+    moodEyes: [
+      { image: "/img/gr/k-gte-106-1-tr-7.png", title: "Tattoo Gel Eyepencil", href: "/category/eye-pencil" },
+      { image: "/img/gr/p-sce-m03-1-tr-3.png", title: "Soft Color Matte Mono Eyeshadow", href: "/category/eyeshadow" },
+      { image: "/img/gr/k-lmw-207-1-tr-2.png", title: "Liner Matic Waterproof Eyepencil", href: "/category/eye-pencil" },
+      { image: "/img/gr/p-sce-p44-1-tr-6.png", title: "Soft Color Pearl Mono Eyeshadow", href: "/category/eyeshadow" },
+      { image: "/img/gr/p-sge-54-2-tr-1.png", title: "Sparkle Glow", href: "/category/eyeshadow" },
+      { image: "/img/gr/m-fle-104-01-tr-5.png", title: "Flash Liner Colored Eyeliner", href: "/category/eyeliner" },
+      { image: "/img/gr/m-flm-010-01-tr-4.png", title: "Flash Lash Colored Mascara", href: "/category/colored-mascara" },
+    ] as Banner[],
+    reels: [
+      { image: "/img/gr/sizden-gelenler-1-tr-1.jpg", title: "Golden Rose beauty video", href: "https://www.youtube.com/shorts/4TIVUaLw_kc" },
+      { image: "/img/gr/sizden-gelenler-4-tr-2.jpg", title: "Golden Rose beauty video", href: "https://www.youtube.com/shorts/9Ihm_ooFdVo" },
+      { image: "/img/gr/sizden-gelenler-2-tr-3.jpg", title: "Golden Rose beauty video", href: "https://www.youtube.com/shorts/i-8nHAb4s_A" },
+      { image: "/img/gr/sizden-gelenler-5-tr-4.jpg", title: "Golden Rose beauty video", href: "https://www.youtube.com/shorts/w98xE9XxllE" },
+      { image: "/img/gr/sizden-gelenler-3-tr-5.jpg", title: "Golden Rose beauty video", href: "https://www.youtube.com/shorts/E3bIanyZG9I" },
+    ] as Banner[],
+    storeBanner: [
+      { image: "/img/gr/kioskbaslik-1-tr-1.jpg", title: "Discover Golden Rose Up Close", href: "/contact" },
+    ] as Banner[],
+  },
   about: {
     title: "About Us",
     intro: "Golden Rose is a cosmetics brand founded in 1979: color cosmetics for face, eyes, lips and nails at affordable prices.",
@@ -122,11 +222,17 @@ export type ContentKey = keyof Content;
 
 // ───────── admin editor layout ─────────
 
-type Sub = { name: string; label: string; long?: boolean };
+type Sub = { name: string; label: string; long?: boolean; image?: boolean };
 export type FieldSpec =
   | { name: string; label: string; type: "text" | "textarea" | "number"; hint?: string }
   | { name: string; label: string; type: "list"; hint?: string; long?: boolean }
   | { name: string; label: string; type: "objects"; hint?: string; fields: Sub[]; fixed?: boolean };
+
+const banner: Sub[] = [
+  { name: "image", label: "ფოტო", image: true },
+  { name: "title", label: "სათაური / აღწერა" },
+  { name: "href", label: "ბმული (მაგ. /category/lips)" },
+];
 
 const link: Sub[] = [
   { name: "label", label: "ტექსტი" },
@@ -209,6 +315,34 @@ export const contentSections: { key: ContentKey; title: string; description: str
           { name: "text", label: "ტექსტი" },
         ],
       },
+    ],
+  },
+  {
+    key: "homeMedia",
+    title: "მთავარი გვერდი: ბანერები და ფოტოები",
+    description: "მთავარი გვერდის ყველა ბანერი, stories, Mood ბლოკები, ვიდეოები და პროდუქტების კარუსელები - ზემოდან ქვემოთ, ისე როგორც საიტზე ჩანს.",
+    fields: [
+      { name: "opening", label: "1. ზედა ბანერები", type: "objects", fields: banner, hint: "სურათი 1536×1024, 4 ცალი" },
+      { name: "lashBanner", label: "2. ფართო ბანერი", type: "objects", fields: banner, hint: "სურათი 1920×200" },
+      { name: "lashPair", label: "3. ორი ბანერი", type: "objects", fields: banner, hint: "სურათი 1260×630" },
+      { name: "nailCollection", label: "4. პროდუქტების კარუსელი: კოლექცია", type: "text", hint: "კოლექციის სახელი ზუსტად ისე, როგორც პროდუქტზეა. ცარიელი = ბლოკი დაიმალება" },
+      { name: "lipPair", label: "5. ორი ბანერი", type: "objects", fields: banner, hint: "სურათი 1200×628" },
+      { name: "ccBanner", label: "6. ფართო ბანერი", type: "objects", fields: banner, hint: "სურათი 1920×200" },
+      { name: "ccPair", label: "7. ორი ბანერი", type: "objects", fields: banner, hint: "სურათი 1200×628" },
+      { name: "stories", label: "8. Stories (მრგვალი ფოტოები)", type: "objects", fields: banner, hint: "კვადრატული ფოტო" },
+      { name: "baseBanner", label: "9. ფართო ბანერი", type: "objects", fields: banner, hint: "სურათი 1920×400" },
+      { name: "cheekTrio", label: "10. სამი ვერტიკალური ბანერი", type: "objects", fields: banner, hint: "სურათი 900×1200" },
+      { name: "newSearch", label: "11. „ახალი პროდუქცია“: სიტყვა პროდუქტის სახელში", type: "text", hint: "მაგ. Mood. ცარიელი = უბრალოდ უახლესი პროდუქტები" },
+      { name: "lipFeature", label: "12. დიდი ფოტო კარუსელის გვერდით", type: "objects", fields: banner, hint: "სურათი 1080×1080" },
+      { name: "lipCollection", label: "12. კარუსელის კოლექცია", type: "text" },
+      { name: "browFeature", label: "13. დიდი ფოტო კარუსელის გვერდით", type: "objects", fields: banner, hint: "სურათი 600×600" },
+      { name: "browCollection", label: "13. კარუსელის კოლექცია", type: "text" },
+      { name: "eyeTrio", label: "14. სამი ბანერი", type: "objects", fields: banner, hint: "სურათი 1200×600" },
+      { name: "eyeCollection", label: "15. პროდუქტების კარუსელი: კოლექცია", type: "text" },
+      { name: "moodLips", label: "16. Mood ბლოკი (ტუჩები)", type: "objects", fields: banner, hint: "გამჭვირვალე ფონის PNG, ვერტიკალური" },
+      { name: "moodEyes", label: "17. Mood ბლოკი (თვალები)", type: "objects", fields: banner, hint: "გამჭვირვალე ფონის PNG, ვერტიკალური" },
+      { name: "reels", label: "18. ვიდეოები (სოც. ქსელები)", type: "objects", fields: banner, hint: "ფოტო 400×500; ბმული - ვიდეოზე" },
+      { name: "storeBanner", label: "19. ქვედა ბანერი", type: "objects", fields: banner, hint: "სურათი 1920×300" },
     ],
   },
   {
