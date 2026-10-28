@@ -1,0 +1,992 @@
+[
+  {
+    "name": "Nail Rituals - Nail & Cuticle Oil",
+    "collection": "Nail Rituals",
+    "shade": null,
+    "category": "Nail Care",
+    "price": 23,
+    "salePrice": null,
+    "isNew": true,
+    "featured": true,
+    "images": [
+      "/img/gr/golden-rose-nail-rituals-nutrition-oil-tirnak-ve-tirnak-eti-yagi--e6ec2bab.jpg",
+      "/img/gr/golden-rose-nail-rituals-nutrition-oil-tirnak-ve-tirnak-eti-yagi--143a6516.jpg"
+    ],
+    "description": "Part of the Nail Rituals care line: a simple routine that keeps nails and cuticles smooth, strong and healthy-looking."
+  },
+  {
+    "name": "Nail Rituals - Smoothing Nail & Cuticle Scrub",
+    "collection": "Nail Rituals",
+    "shade": null,
+    "category": "Nail Care",
+    "price": 23,
+    "salePrice": null,
+    "isNew": true,
+    "featured": true,
+    "images": [
+      "/img/gr/golden-rose-nail-rituals-002-berry-glow-scrub-tirnak-bakimi-tirna-80f1eaf3.jpg",
+      "/img/gr/golden-rose-nail-rituals-002-berry-glow-scrub-tirnak-bakimi-tirna-7245f957.jpg"
+    ],
+    "description": "Part of the Nail Rituals care line: a simple routine that keeps nails and cuticles smooth, strong and healthy-looking."
+  },
+  {
+    "name": "Nail Rituals - Smoothing & Leveling Nail Foundation",
+    "collection": "Nail Rituals",
+    "shade": null,
+    "category": "Nail Care",
+    "price": 23,
+    "salePrice": null,
+    "isNew": true,
+    "featured": true,
+    "images": [
+      "/img/gr/golden-rose-nail-rituals-003-nail-foundation-tirnak-bakimi-tirnak-a12fb0cd.jpg",
+      "/img/gr/golden-rose-nail-rituals-003-nail-foundation-tirnak-bakimi-tirnak-bb44529d.jpg"
+    ],
+    "description": "Part of the Nail Rituals care line: a simple routine that keeps nails and cuticles smooth, strong and healthy-looking."
+  },
+  {
+    "name": "Nail Rituals - Nail Hardener & Strengthener",
+    "collection": "Nail Rituals",
+    "shade": null,
+    "category": "Nail Care",
+    "price": 23,
+    "salePrice": null,
+    "isNew": true,
+    "featured": true,
+    "images": [
+      "/img/gr/golden-rose-nail-rituals-004-extreme-nail-hardener-tirnak-bakimi--56919ea1.jpg",
+      "/img/gr/golden-rose-nail-rituals-004-extreme-nail-hardener-tirnak-bakimi--102b2081.jpg"
+    ],
+    "description": "Part of the Nail Rituals care line: a simple routine that keeps nails and cuticles smooth, strong and healthy-looking."
+  },
+  {
+    "name": "Nail Rituals - Nourishing & Protective Nail Coat",
+    "collection": "Nail Rituals",
+    "shade": null,
+    "category": "Nail Care",
+    "price": 23,
+    "salePrice": null,
+    "isNew": true,
+    "featured": true,
+    "images": [
+      "/img/gr/golden-rose-nail-rituals-005-all-in-one-booster-tirnak-bakimi-tir-8c447790.jpg",
+      "/img/gr/golden-rose-nail-rituals-005-all-in-one-booster-tirnak-bakimi-tir-34c790cd.jpg"
+    ],
+    "description": "Part of the Nail Rituals care line: a simple routine that keeps nails and cuticles smooth, strong and healthy-looking."
+  },
+  {
+    "name": "Mood Satiny Matte Lipstick - 08 Candy Red - Red Satin Matte Lipstick",
+    "collection": "Mood Satiny Matte Lipstick",
+    "shade": "08 Candy Red",
+    "category": "Lipstick",
+    "price": 42,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-08-candy-red-mat-ruj-mat-r-26ed689b.jpg",
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-08-candy-red-mat-ruj-mat-r-ae69e628.jpg"
+    ],
+    "description": "A creamy lipstick with a soft satin-matte finish and rich color payoff that stays comfortable all day."
+  },
+  {
+    "name": "Mood Satiny Matte Lipstick - 07 Berry Rouge - Pink Satin Matte Lipstick",
+    "collection": "Mood Satiny Matte Lipstick",
+    "shade": "07 Berry Rouge",
+    "category": "Lipstick",
+    "price": 42,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-07-berry-rouge-mat-ruj-mat-c0560ebf.jpg",
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-07-berry-rouge-mat-ruj-mat-f09c4a33.jpg"
+    ],
+    "description": "A creamy lipstick with a soft satin-matte finish and rich color payoff that stays comfortable all day."
+  },
+  {
+    "name": "Mood Satiny Matte Lipstick - 06 Peach Amber - Peach Satin Matte Lipstick",
+    "collection": "Mood Satiny Matte Lipstick",
+    "shade": "06 Peach Amber",
+    "category": "Lipstick",
+    "price": 42,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-06-peach-amber-mat-ruj-mat-8d41b350.jpg",
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-06-peach-amber-mat-ruj-mat-954d8a36.jpg"
+    ],
+    "description": "A creamy lipstick with a soft satin-matte finish and rich color payoff that stays comfortable all day."
+  },
+  {
+    "name": "Mood Satiny Matte Lipstick - 05 Burnt Blush - Brown Satin Matte Lipstick",
+    "collection": "Mood Satiny Matte Lipstick",
+    "shade": "05 Burnt Blush",
+    "category": "Lipstick",
+    "price": 42,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-05-burnt-blush-mat-ruj-mat-2e5d1c25.jpg",
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-05-burnt-blush-mat-ruj-mat-b4ac4375.jpg"
+    ],
+    "description": "A creamy lipstick with a soft satin-matte finish and rich color payoff that stays comfortable all day."
+  },
+  {
+    "name": "Mood Satiny Matte Lipstick - 04 Blush Pink - Pink Satin Matte Lipstick",
+    "collection": "Mood Satiny Matte Lipstick",
+    "shade": "04 Blush Pink",
+    "category": "Lipstick",
+    "price": 42,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-04-blush-pink-mat-ruj-mat--49e0aa7c.jpg",
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-04-blush-pink-mat-ruj-mat--05cd33ff.jpg"
+    ],
+    "description": "A creamy lipstick with a soft satin-matte finish and rich color payoff that stays comfortable all day."
+  },
+  {
+    "name": "Mood Satiny Matte Lipstick - 03 Nude Rose - Peach Satin Matte Lipstick",
+    "collection": "Mood Satiny Matte Lipstick",
+    "shade": "03 Nude Rose",
+    "category": "Lipstick",
+    "price": 42,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-03-nude-rose-mat-ruj-mat-r-be4418af.jpg",
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-03-nude-rose-mat-ruj-mat-r-81cf3bc4.jpg"
+    ],
+    "description": "A creamy lipstick with a soft satin-matte finish and rich color payoff that stays comfortable all day."
+  },
+  {
+    "name": "Mood Satiny Matte Lipstick - 02 Velvet Taupe - Pink Satin Matte Lipstick",
+    "collection": "Mood Satiny Matte Lipstick",
+    "shade": "02 Velvet Taupe",
+    "category": "Lipstick",
+    "price": 42,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-02-velvet-taupe-mat-ruj-ma-a792723f.jpg",
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-02-velvet-taupe-mat-ruj-ma-38e8ecf3.jpg"
+    ],
+    "description": "A creamy lipstick with a soft satin-matte finish and rich color payoff that stays comfortable all day."
+  },
+  {
+    "name": "Mood Satiny Matte Lipstick - 01 Bare Nude - Brown Satin Matte Lipstick",
+    "collection": "Mood Satiny Matte Lipstick",
+    "shade": "01 Bare Nude",
+    "category": "Lipstick",
+    "price": 42,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-01-bare-nude-mat-ruj-mat-r-c7df6eba.jpg",
+      "/img/gr/golden-rose-mood-satiny-matte-lipstick-01-bare-nude-mat-ruj-mat-r-20b5334a.jpg"
+    ],
+    "description": "A creamy lipstick with a soft satin-matte finish and rich color payoff that stays comfortable all day."
+  },
+  {
+    "name": "Mood Sheer Bright Lipstick - 108 Rosy Plum - Sheer Glossy Moisturizing Burgundy Lipstick",
+    "collection": "Mood Sheer Bright Lipstick",
+    "shade": "108 Rosy Plum",
+    "category": "Lipstick",
+    "price": 43,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-108-rosy-plum-parlak-ruj-p-80c6396e.jpg",
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-108-rosy-plum-parlak-ruj-p-1bc3d69e.jpg"
+    ],
+    "description": "A moisturizing lipstick with a sheer, glossy finish for a fresh, natural-looking tint."
+  },
+  {
+    "name": "Mood Sheer Bright Lipstick - 107 Mood Mauve - Sheer Glossy Moisturizing Pink Lipstick",
+    "collection": "Mood Sheer Bright Lipstick",
+    "shade": "107 Mood Mauve",
+    "category": "Lipstick",
+    "price": 43,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-107-mood-mauve-parlak-ruj--0622d8cc.jpg",
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-107-mood-mauve-parlak-ruj--08c0fe42.jpg"
+    ],
+    "description": "A moisturizing lipstick with a sheer, glossy finish for a fresh, natural-looking tint."
+  },
+  {
+    "name": "Mood Sheer Bright Lipstick - 106 Peachy Pink - Sheer Glossy Moisturizing Pink Lipstick",
+    "collection": "Mood Sheer Bright Lipstick",
+    "shade": "106 Peachy Pink",
+    "category": "Lipstick",
+    "price": 43,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-106-peachy-pink-parlak-ruj-75f92121.jpg",
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-106-peachy-pink-parlak-ruj-cf1dd525.jpg"
+    ],
+    "description": "A moisturizing lipstick with a sheer, glossy finish for a fresh, natural-looking tint."
+  },
+  {
+    "name": "Mood Sheer Bright Lipstick - 105 Hazelnut - Sheer Glossy Moisturizing Brown Lipstick",
+    "collection": "Mood Sheer Bright Lipstick",
+    "shade": "105 Hazelnut",
+    "category": "Lipstick",
+    "price": 43,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-105-hazelnut-parlak-ruj-pa-f5221c6d.jpg",
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-105-hazelnut-parlak-ruj-pa-7d61c98b.jpg"
+    ],
+    "description": "A moisturizing lipstick with a sheer, glossy finish for a fresh, natural-looking tint."
+  },
+  {
+    "name": "Mood Sheer Bright Lipstick - 104 Nude Latte - Sheer Glossy Moisturizing Nude Lipstick",
+    "collection": "Mood Sheer Bright Lipstick",
+    "shade": "104 Nude Latte",
+    "category": "Lipstick",
+    "price": 43,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-104-nude-latte-parlak-ruj--1870b441.jpg",
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-104-nude-latte-parlak-ruj--da2438b6.jpg"
+    ],
+    "description": "A moisturizing lipstick with a sheer, glossy finish for a fresh, natural-looking tint."
+  },
+  {
+    "name": "Mood Sheer Bright Lipstick - 103 Coral Red - Sheer Glossy Moisturizing Red Lipstick",
+    "collection": "Mood Sheer Bright Lipstick",
+    "shade": "103 Coral Red",
+    "category": "Lipstick",
+    "price": 43,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-103-coral-red-parlak-ruj-p-31ec841e.jpg",
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-103-coral-red-parlak-ruj-p-3cc47682.jpg"
+    ],
+    "description": "A moisturizing lipstick with a sheer, glossy finish for a fresh, natural-looking tint."
+  },
+  {
+    "name": "Mood Sheer Bright Lipstick - 102 Peach Bliss - Sheer Glossy Moisturizing Peach Lipstick",
+    "collection": "Mood Sheer Bright Lipstick",
+    "shade": "102 Peach Bliss",
+    "category": "Lipstick",
+    "price": 43,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-102-peach-bliss-parlak-ruj-28e1a8ba.jpg",
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-102-peach-bliss-parlak-ruj-4329a24d.jpg"
+    ],
+    "description": "A moisturizing lipstick with a sheer, glossy finish for a fresh, natural-looking tint."
+  },
+  {
+    "name": "Mood Sheer Bright Lipstick - 101 Nude Glow - Sheer Glossy Moisturizing Nude Lipstick",
+    "collection": "Mood Sheer Bright Lipstick",
+    "shade": "101 Nude Glow",
+    "category": "Lipstick",
+    "price": 43,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-101-nude-glow-parlak-ruj-p-21a44420.jpg",
+      "/img/gr/golden-rose-mood-sheer-bright-lipstick-101-nude-glow-parlak-ruj-p-eed3be9d.jpg"
+    ],
+    "description": "A moisturizing lipstick with a sheer, glossy finish for a fresh, natural-looking tint."
+  },
+  {
+    "name": "Mood Sparkle Bright Lipstick - 154 Violet Fizz - Shimmering Glossy Purple Lipstick",
+    "collection": "Mood Sparkle Bright Lipstick",
+    "shade": "154 Violet Fizz",
+    "category": "Lipstick",
+    "price": 44,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sparkle-bright-lipstick-154-violet-fizz-isiltili-0463f5d6.jpg",
+      "/img/gr/golden-rose-mood-sparkle-bright-lipstick-154-violet-fizz-isiltili-e627b6e2.jpg"
+    ],
+    "description": "A glossy lipstick with fine shimmer particles for a radiant, light-catching finish."
+  },
+  {
+    "name": "Mood Sparkle Bright Lipstick - 153 Pink Glitz - Shimmering Glossy Pink Lipstick",
+    "collection": "Mood Sparkle Bright Lipstick",
+    "shade": "153 Pink Glitz",
+    "category": "Lipstick",
+    "price": 44,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sparkle-bright-lipstick-153-pink-glitz-isiltili--436559e5.jpg",
+      "/img/gr/golden-rose-mood-sparkle-bright-lipstick-153-pink-glitz-isiltili--2d54ce15.jpg"
+    ],
+    "description": "A glossy lipstick with fine shimmer particles for a radiant, light-catching finish."
+  },
+  {
+    "name": "Mood Sparkle Bright Lipstick - 152 Peach Glam - Shimmering Glossy Peach Lipstick",
+    "collection": "Mood Sparkle Bright Lipstick",
+    "shade": "152 Peach Glam",
+    "category": "Lipstick",
+    "price": 44,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sparkle-bright-lipstick-152-peach-glam-isiltili--ce321969.jpg",
+      "/img/gr/golden-rose-mood-sparkle-bright-lipstick-152-peach-glam-isiltili--c9ddd512.jpg"
+    ],
+    "description": "A glossy lipstick with fine shimmer particles for a radiant, light-catching finish."
+  },
+  {
+    "name": "Mood Sparkle Bright Lipstick - 151 Rosy Gem - Shimmering Glossy Burgundy Lipstick",
+    "collection": "Mood Sparkle Bright Lipstick",
+    "shade": "151 Rosy Gem",
+    "category": "Lipstick",
+    "price": 44,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-sparkle-bright-lipstick-151-rosy-gem-isiltili-ru-d8c72083.jpg",
+      "/img/gr/golden-rose-mood-sparkle-bright-lipstick-151-rosy-gem-isiltili-ru-41daf21c.jpg"
+    ],
+    "description": "A glossy lipstick with fine shimmer particles for a radiant, light-catching finish."
+  },
+  {
+    "name": "Mood Gleamy Lip Glaze Lipgloss - 206 Plum Glaze - Burgundy Lip Gloss",
+    "collection": "Mood Gleamy Lip Glaze Lipgloss",
+    "shade": "206 Plum Glaze",
+    "category": "Lip Gloss",
+    "price": 36,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-gleamy-lip-glaze-lipgloss-206-plum-glaze-isiltil-b2d939f0.jpg",
+      "/img/gr/golden-rose-mood-gleamy-lip-glaze-lipgloss-206-plum-glaze-isiltil-6a57774e.jpg"
+    ],
+    "description": "A non-sticky lip glaze with a high-shine finish and a juicy hint of color."
+  },
+  {
+    "name": "Mood Gleamy Lip Glaze Lipgloss - 205 Cherry Pop - Red Lip Gloss",
+    "collection": "Mood Gleamy Lip Glaze Lipgloss",
+    "shade": "205 Cherry Pop",
+    "category": "Lip Gloss",
+    "price": 36,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-gleamy-lip-glaze-lipgloss-205-cherry-pop-renkli--c4a13bb4.jpg",
+      "/img/gr/golden-rose-mood-gleamy-lip-glaze-lipgloss-205-cherry-pop-renkli--86ebd89d.jpg"
+    ],
+    "description": "A non-sticky lip glaze with a high-shine finish and a juicy hint of color."
+  },
+  {
+    "name": "Mood Gleamy Lip Glaze Lipgloss - 204 Baby Pink - Pink Lip Gloss",
+    "collection": "Mood Gleamy Lip Glaze Lipgloss",
+    "shade": "204 Baby Pink",
+    "category": "Lip Gloss",
+    "price": 36,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-gleamy-lip-glaze-lipgloss-204-baby-pink-renkli-d-523a9c0c.jpg",
+      "/img/gr/golden-rose-mood-gleamy-lip-glaze-lipgloss-204-baby-pink-renkli-d-5035b8f0.jpg"
+    ],
+    "description": "A non-sticky lip glaze with a high-shine finish and a juicy hint of color."
+  },
+  {
+    "name": "Mood Gleamy Lip Glaze Lipgloss - 203 Rose Chic - Dusty Rose Lip Gloss",
+    "collection": "Mood Gleamy Lip Glaze Lipgloss",
+    "shade": "203 Rose Chic",
+    "category": "Lip Gloss",
+    "price": 36,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-gleamy-lip-glaze-lipgloss-203-rose-chic-renkli-d-1b279845.jpg",
+      "/img/gr/golden-rose-mood-gleamy-lip-glaze-lipgloss-203-rose-chic-renkli-d-522c1e88.jpg"
+    ],
+    "description": "A non-sticky lip glaze with a high-shine finish and a juicy hint of color."
+  },
+  {
+    "name": "Mood Gleamy Lip Glaze Lipgloss - 202 Peachy Nude - Nude Lip Gloss",
+    "collection": "Mood Gleamy Lip Glaze Lipgloss",
+    "shade": "202 Peachy Nude",
+    "category": "Lip Gloss",
+    "price": 36,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-mood-gleamy-lip-glaze-lipgloss-202-peachy-nude-renkli-689be5c8.jpg",
+      "/img/gr/golden-rose-mood-gleamy-lip-glaze-lipgloss-202-peachy-nude-renkli-8aef889c.jpg"
+    ],
+    "description": "A non-sticky lip glaze with a high-shine finish and a juicy hint of color."
+  },
+  {
+    "name": "Lip Butter Balm Care&Gloss - 01 Bubble Gum - Pink Lip Gloss",
+    "collection": "Lip Butter Balm Care&Gloss",
+    "shade": "01 Bubble Gum",
+    "category": "Lip Gloss",
+    "price": 57,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-01-bubble-gum-renkli-dudak--9e6f7d35.jpg",
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-01-bubble-gum-renkli-dudak--956aea12.jpg"
+    ],
+    "description": "A caring lip butter balm that nourishes like a balm and shines like a gloss."
+  },
+  {
+    "name": "Lip Butter Balm Care&Gloss - 02 Cappuccino - Brown Lip Gloss",
+    "collection": "Lip Butter Balm Care&Gloss",
+    "shade": "02 Cappuccino",
+    "category": "Lip Gloss",
+    "price": 57,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-02-cappuccino-renkli-dudak--86ed571c.jpg",
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-02-cappuccino-renkli-dudak--34a9fe77.jpg"
+    ],
+    "description": "A caring lip butter balm that nourishes like a balm and shines like a gloss."
+  },
+  {
+    "name": "Lip Butter Balm Care&Gloss - 03 Vanilla Sorbet - Cream Lip Gloss",
+    "collection": "Lip Butter Balm Care&Gloss",
+    "shade": "03 Vanilla Sorbet",
+    "category": "Lip Gloss",
+    "price": 57,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-03-vanilla-sorbet-renkli-du-8cc56b8f.jpg",
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-03-vanilla-sorbet-renkli-du-123d5a73.jpg"
+    ],
+    "description": "A caring lip butter balm that nourishes like a balm and shines like a gloss."
+  },
+  {
+    "name": "Lip Butter Balm Care&Gloss - 04 Sweet Cherry - Red Lip Gloss",
+    "collection": "Lip Butter Balm Care&Gloss",
+    "shade": "04 Sweet Cherry",
+    "category": "Lip Gloss",
+    "price": 57,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-04-sweet-cherry-renkli-duda-3072645f.jpg",
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-04-sweet-cherry-renkli-duda-cd12397b.jpg"
+    ],
+    "description": "A caring lip butter balm that nourishes like a balm and shines like a gloss."
+  },
+  {
+    "name": "Lip Butter Balm Care&Gloss - 05 Wild Berry - Purple Lip Gloss",
+    "collection": "Lip Butter Balm Care&Gloss",
+    "shade": "05 Wild Berry",
+    "category": "Lip Gloss",
+    "price": 57,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-05-wild-berry-renkli-dudak--af36bca8.jpg",
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-05-wild-berry-renkli-dudak--46a2872c.jpg"
+    ],
+    "description": "A caring lip butter balm that nourishes like a balm and shines like a gloss."
+  },
+  {
+    "name": "Lip Butter Balm Care&Gloss - 06 Strawberry Jam - Pink Lip Gloss",
+    "collection": "Lip Butter Balm Care&Gloss",
+    "shade": "06 Strawberry Jam",
+    "category": "Lip Gloss",
+    "price": 57,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-06-strawberry-jam-renkli-du-ba69ea0c.jpg",
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-06-strawberry-jam-renkli-du-578183f0.jpg"
+    ],
+    "description": "A caring lip butter balm that nourishes like a balm and shines like a gloss."
+  },
+  {
+    "name": "Lip Butter Balm Care&Gloss - 07 Peachy Glow - Peach Lip Gloss",
+    "collection": "Lip Butter Balm Care&Gloss",
+    "shade": "07 Peachy Glow",
+    "category": "Lip Gloss",
+    "price": 57,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-07-peachy-glow-renkli-dudak-b047ceb1.jpg",
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-07-peachy-glow-renkli-dudak-6ffeba93.jpg"
+    ],
+    "description": "A caring lip butter balm that nourishes like a balm and shines like a gloss."
+  },
+  {
+    "name": "Lip Butter Balm Care&Gloss - 08 Mulberry - Purple Lip Gloss",
+    "collection": "Lip Butter Balm Care&Gloss",
+    "shade": "08 Mulberry",
+    "category": "Lip Gloss",
+    "price": 57,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-08-mulberry-renkli-dudak-pa-b9b72e86.jpg",
+      "/img/gr/golden-rose-lip-butter-balm-caregloss-08-mulberry-renkli-dudak-pa-42fe392e.jpg"
+    ],
+    "description": "A caring lip butter balm that nourishes like a balm and shines like a gloss."
+  },
+  {
+    "name": "Max Hold Brow Glue - 103 Taupe - Light Brown Brow Fixing Gel",
+    "collection": "Max Hold Brow Glue",
+    "shade": "103 Taupe",
+    "category": "Brows",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-max-hold-brow-glue-103-kas-maskarasi-kas-sekillendiri-ac91b5da.jpg",
+      "/img/gr/golden-rose-max-hold-brow-glue-103-kas-maskarasi-kas-sekillendiri-eac22349.jpg"
+    ],
+    "description": "A brow fixing gel that sets brows in place for a laminated, groomed look that lasts all day."
+  },
+  {
+    "name": "Max Hold Brow Glue - 104 Brown - Brown Brow Fixing Gel",
+    "collection": "Max Hold Brow Glue",
+    "shade": "104 Brown",
+    "category": "Brows",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-max-hold-brow-glue-104-kas-maskarasi-kas-sekillendiri-7daeb853.jpg",
+      "/img/gr/golden-rose-max-hold-brow-glue-104-kas-maskarasi-kas-sekillendiri-adc5fb28.jpg"
+    ],
+    "description": "A brow fixing gel that sets brows in place for a laminated, groomed look that lasts all day."
+  },
+  {
+    "name": "Max Hold Brow Glue - Clear Brow Fixing Gel",
+    "collection": "Max Hold Brow Glue",
+    "shade": null,
+    "category": "Brows",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/max-hold-brow-glue-kas-sabitleyici-kas-sekillendirici-golden-rose-max-hold-brow-glue-38701-40-K.jpg",
+      "/img/gr/max-hold-brow-glue-kas-sabitleyici-kas-sekillendirici-golden-rose-max-hold-brow-glue-38419-40-K.jpg"
+    ],
+    "description": "A brow fixing gel that sets brows in place for a laminated, groomed look that lasts all day."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 01 Woody - Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "01 Woody",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-01-woody-likit-far-isiltil-5ea1af4f.jpg",
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-01-woody-likit-far-isiltil-8057c842.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 02 Cinnamon - Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "02 Cinnamon",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-02-cinnamon-likit-far-isil-724edbd8.jpg",
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-02-cinnamon-likit-far-isil-58cd645b.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 03 Mocha - Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "03 Mocha",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-03-mocha-likit-far-isiltil-9c4fa021.jpg",
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-03-mocha-likit-far-isiltil-183c2739.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 04 Chocolate - Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "04 Chocolate",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-04-chocolate-likit-far-isi-2dbc8ab8.jpg",
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-04-chocolate-likit-far-isi-b1a0cfd4.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 05 Rose Gold - Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "05 Rose Gold",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-05-rose-gold-likit-far-isi-70afc6d3.jpg",
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-05-rose-gold-likit-far-isi-b3c4cbcb.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 06 Gold Bronze - Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "06 Gold Bronze",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-06-gold-bronze-likit-far-i-4dc614aa.jpg",
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-06-gold-bronze-likit-far-i-44b1e181.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 07 Topaz - Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "07 Topaz",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-07-topaz-likit-far-isiltil-45e1d37f.jpg",
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-07-topaz-likit-far-isiltil-8a8d5378.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 08 Rosy Brown - Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "08 Rosy Brown",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-08-rosy-brown-likit-far-is-5d3a4d18.jpg",
+      "/img/gr/golden-rose-eye-glaze-liquid-eyeshadow-08-rosy-brown-likit-far-is-70bedc3a.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 10 Quartz - Cream Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "10 Quartz",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/eye-glaze-liquid-eyeshadow-10-quartz-likit-far-isiltili-far-golde-1de0103c.jpg",
+      "/img/gr/eye-glaze-liquid-eyeshadow-10-quartz-likit-far-isiltili-far-golde-1256f810.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 11 Luna Rosa - Pink Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "11 Luna Rosa",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/eye-glaze-liquid-eyeshadow-11-luna-rosa-likit-far-isiltili-far-go-6c34ff4f.jpg",
+      "/img/gr/eye-glaze-liquid-eyeshadow-11-luna-rosa-likit-far-isiltili-far-go-fb3891fc.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Eye Glaze Liquid Eyeshadow - 12 Rosy Sand - Bronze Liquid Eyeshadow",
+    "collection": "Eye Glaze Liquid Eyeshadow",
+    "shade": "12 Rosy Sand",
+    "category": "Eyeshadow",
+    "price": 34,
+    "salePrice": 17,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/eye-glaze-liquid-eyeshadow-12-rosy-sand-likit-far-isiltili-far-go-205ed6ce.jpg",
+      "/img/gr/eye-glaze-liquid-eyeshadow-12-rosy-sand-likit-far-isiltili-far-go-2b736b1a.jpg"
+    ],
+    "description": "A liquid eyeshadow with a wet-look shimmer that glides on easily and dries without creasing."
+  },
+  {
+    "name": "Long Wear Finishing Powder - Cotton Candy - Pink Setting Loose Powder",
+    "collection": "Long Wear Finishing Powder",
+    "shade": "Cotton Candy",
+    "category": "Powder",
+    "price": 56,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-face-742d2d64c9.jpg"
+    ],
+    "description": "A finely milled setting powder that sets makeup, controls shine and helps it last longer."
+  },
+  {
+    "name": "Long Wear Finishing Powder - Banana - Yellow Setting Loose Powder",
+    "collection": "Long Wear Finishing Powder",
+    "shade": "Banana",
+    "category": "Powder",
+    "price": 56,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-face-bb26e3041b.jpg"
+    ],
+    "description": "A finely milled setting powder that sets makeup, controls shine and helps it last longer."
+  },
+  {
+    "name": "Total Cover 2in1 Foundation & Concealer - 19 Caramel - 2-in-1 Foundation & Concealer",
+    "collection": "Total Cover 2in1 Foundation & Concealer",
+    "shade": "19 Caramel",
+    "category": "Foundation",
+    "price": 79,
+    "salePrice": null,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-face-a6652434cf.jpg"
+    ],
+    "description": "A high-coverage foundation and concealer in one for an even, flawless-looking complexion."
+  },
+  {
+    "name": "Skin Perfector Color Correcting Light Foundation - 101 Beige - Color Correcting Lightweight Foundation",
+    "collection": "Skin Perfector Color Correcting Light Foundation",
+    "shade": "101 Beige",
+    "category": "Foundation",
+    "price": 32,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-face-261de7181e.jpg"
+    ],
+    "description": "A lightweight color-correcting foundation that evens out skin tone for a smooth, radiant look."
+  },
+  {
+    "name": "Skin Perfector Color Correcting Light Foundation - 102 Neutral - Color Correcting Lightweight Foundation",
+    "collection": "Skin Perfector Color Correcting Light Foundation",
+    "shade": "102 Neutral",
+    "category": "Foundation",
+    "price": 32,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-face-3369cef42b.jpg"
+    ],
+    "description": "A lightweight color-correcting foundation that evens out skin tone for a smooth, radiant look."
+  },
+  {
+    "name": "Skin Perfector Color Correcting Light Foundation - 103 Nude - Color Correcting Lightweight Foundation",
+    "collection": "Skin Perfector Color Correcting Light Foundation",
+    "shade": "103 Nude",
+    "category": "Foundation",
+    "price": 32,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-face-ed19853c78.jpg"
+    ],
+    "description": "A lightweight color-correcting foundation that evens out skin tone for a smooth, radiant look."
+  },
+  {
+    "name": "Skin Perfector Color Correcting Light Foundation - 104 Warm Honey - Color Correcting Lightweight Foundation",
+    "collection": "Skin Perfector Color Correcting Light Foundation",
+    "shade": "104 Warm Honey",
+    "category": "Foundation",
+    "price": 32,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-face-34d36fe3ec.jpg"
+    ],
+    "description": "A lightweight color-correcting foundation that evens out skin tone for a smooth, radiant look."
+  },
+  {
+    "name": "Stay Soft Smooth Hydrating Foundation - 211 - Moisturizing Foundation",
+    "collection": "Stay Soft Smooth Hydrating Foundation",
+    "shade": "211",
+    "category": "Foundation",
+    "price": 40,
+    "salePrice": null,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-face-d77b1a3dc5.jpg"
+    ],
+    "description": "A hydrating foundation with a soft, smooth finish for a natural, comfortable look."
+  },
+  {
+    "name": "Longest Lash Tubing Mascara - Black - Extra Length False Lash Effect Black Mascara",
+    "collection": "Longest Lash Tubing Mascara",
+    "shade": "Black",
+    "category": "Mascara",
+    "price": 30,
+    "salePrice": null,
+    "isNew": true,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-mascara-010736f8bb.jpg"
+    ],
+    "description": ""
+  },
+  {
+    "name": "Flash Lash Colored Mascara - 11 Chocolate - Brown Mascara",
+    "collection": "Flash Lash Colored Mascara",
+    "shade": "11 Chocolate",
+    "category": "Mascara",
+    "price": 41,
+    "salePrice": null,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-mascara-e68f4441d6.jpg"
+    ],
+    "description": ""
+  },
+  {
+    "name": "Flash Lash Colored Mascara - 10 Burgundy - Burgundy Mascara",
+    "collection": "Flash Lash Colored Mascara",
+    "shade": "10 Burgundy",
+    "category": "Mascara",
+    "price": 41,
+    "salePrice": null,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-mascara-cdc7101046.jpg"
+    ],
+    "description": ""
+  },
+  {
+    "name": "Curl Passion Deep Black Mascara - Curling Intense Black Mascara",
+    "collection": "Curl Passion Deep Black Mascara",
+    "shade": null,
+    "category": "Mascara",
+    "price": 32,
+    "salePrice": null,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-mascara-99de3e133a.jpg"
+    ],
+    "description": ""
+  },
+  {
+    "name": "Lash Touch Waterproof Mascara - Waterproof Black Mascara",
+    "collection": "Lash Touch Waterproof Mascara",
+    "shade": null,
+    "category": "Mascara",
+    "price": 32,
+    "salePrice": null,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-mascara-5e74a2553a.jpg"
+    ],
+    "description": ""
+  },
+  {
+    "name": "Eyeful Lashes Volume Mascara - Volumizing Black Mascara",
+    "collection": "Eyeful Lashes Volume Mascara",
+    "shade": null,
+    "category": "Mascara",
+    "price": 32,
+    "salePrice": null,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-mascara-9bdcabd50a.jpg"
+    ],
+    "description": ""
+  },
+  {
+    "name": "Iconic Lash Intense Black Mascara - Intense Black Mascara",
+    "collection": "Iconic Lash Intense Black Mascara",
+    "shade": null,
+    "category": "Mascara",
+    "price": 47,
+    "salePrice": null,
+    "isNew": false,
+    "featured": false,
+    "images": [
+      "/img/gr/catalog-mascara-3e51b0aec3.jpg"
+    ],
+    "description": ""
+  }
+]
