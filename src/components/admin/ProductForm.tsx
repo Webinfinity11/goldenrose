@@ -8,6 +8,7 @@ import { slugify } from "@/lib/admin-shared";
 import { Button, Card, Field, inputCls } from "./ui";
 import { ImageUploader } from "./ImageUploader";
 import { VariantsEditor, type VariantDraft } from "./VariantsEditor";
+import { TranslationsEditor, type TranslationValue } from "./TranslationsEditor";
 
 type Cat = { id: number; name: string; parentId: number | null };
 
@@ -44,6 +45,7 @@ export function ProductForm({
   const [volume, setVolume] = useState(product?.volume ?? "");
   const [country, setCountry] = useState(product?.country ?? "");
   const [specs, setSpecs] = useState<Spec[]>(product?.specs ?? []);
+  const [i18n, setI18n] = useState<TranslationValue>(product?.i18n ?? {});
   const str = (n: number | null) => (n == null ? "" : String(n));
   const [variants, setVariants] = useState<VariantDraft[]>(
     initialVariants.map((v) => ({
@@ -94,6 +96,7 @@ export function ProductForm({
         volume,
         country,
         specs,
+        i18n,
         images,
         variants: variants.map((v) => ({ ...v, stockQty: v.stockQty.trim() === "" ? null : v.stockQty })),
         categoryIds: cats,
@@ -181,6 +184,19 @@ export function ProductForm({
               <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={6} className={inputCls} />
             </Field>
           </div>
+        </Card>
+
+        <Card title="თარგმანები (English / Русский)">
+          <TranslationsEditor
+            value={i18n}
+            onChange={setI18n}
+            fields={[
+              { name: "name", label: "დასახელება" },
+              { name: "summary", label: "მოკლე აღწერა", long: true },
+              { name: "description", label: "სრული აღწერა", long: true },
+              { name: "country", label: "წარმოების ქვეყანა" },
+            ]}
+          />
         </Card>
 
         <Card title="მახასიათებლები">

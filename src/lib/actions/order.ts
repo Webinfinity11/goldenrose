@@ -9,29 +9,36 @@ import { finalPrice } from "@/lib/format";
 import { adjustStock, syncVariantStock } from "@/lib/stock";
 import { notifyNewOrder } from "@/lib/notify";
 import { after } from "next/server";
+import { fill, isLocale, messages, type Locale } from "@/i18n";
 
+// Error texts reach the shopper in their language: each message here is a key of messages.checkout.
 const schema = z.object({
-  name: z.string().trim().min(2, "Please enter your name").max(100),
+  name: z.string().trim().min(2, "errName").max(100),
   phone: z
     .string()
     .trim()
-    .regex(/^[+\d\s()-]{9,20}$/, "Please enter a valid phone number"),
-  email: z.union([z.literal(""), z.email("Invalid email address")]).optional(),
-  address: z.string().trim().min(5, "Please enter a delivery address").max(500),
+    .regex(/^[+\d\s()-]{9,20}$/, "errPhone"),
+  email: z.union([z.literal(""), z.email("errEmail")]).optional(),
+  address: z.string().trim().min(5, "errAddress").max(500),
   comment: z.string().trim().max(1000).optional(),
   items: z
     .array(
       z.object({ id: z.number().int().positive(), variantId: z.number().int().positive().optional(), qty: z.number().int().min(1).max(999) }),
     )
-    .min(1, "Your cart is empty")
+    .min(1, "errCartEmpty")
     .max(200),
 });
 
 export type OrderResult = { ok: true; id: number } | { ok: false; error: string };
 
-export async function placeOrder(input: z.input<typeof schema>): Promise<OrderResult> {
+/** `locale` is the shopper's language (Server Actions can't read the route's language). */
+export async function placeOrder(input: z.input<typeof schema>, locale?: Locale): Promise<OrderResult> {
+  const t = messages[isLocale(locale) ? locale : "ka"].checkout;
   const parsed = schema.safeParse(input);
-  if (!parsed.success) return { ok: false, error: parsed.error.issues[0].message };
+  if (!parsed.success) {
+    const key = parsed.error.issues[0].message;
+    return { ok: false, error: key in t ? t[key as keyof typeof t] : t.errInvalid };
+  }
   const data = parsed.data;
 
   // Prices and stock always come from the database, never from the browser.
@@ -50,7 +57,7 @@ export async function placeOrder(input: z.input<typeof schema>): Promise<OrderRe
     const label = v ? `${p.name} (${v.name})` : p.name;
     if (!unit.inStock) continue;
     if (unit.stockQty != null && i.qty > unit.stockQty)
-      return { ok: false, error: `Only ${unit.stockQty} of “${label}” left in stock. Please update the quantity in your cart.` };
+      return { ok: false, error: fill(t.errStock, { n: unit.stockQty, name: label }) };
     items.push({
       productId: p.id,
       ...(v && { variantId: v.id, variant: v.name }),
@@ -61,7 +68,7 @@ export async function placeOrder(input: z.input<typeof schema>): Promise<OrderRe
       image: unit.images[0] ?? null,
     });
   }
-  if (!items.length) return { ok: false, error: "The products in your cart are no longer available." };
+  if (!items.length) return { ok: false, error: t.errUnavailable };
 
   // Reserve tracked stock with conditional updates so two simultaneous orders can't oversell.
   const reserved: { productId: number; variantId?: number; qty: number }[] = [];
@@ -82,7 +89,7 @@ export async function placeOrder(input: z.input<typeof schema>): Promise<OrderRe
           .returning({ id: products.id });
     if (!ok.length) {
       await adjustStock(reserved, 1);
-      return { ok: false, error: `Sorry, “${v ? `${p.name} (${v.name})` : p.name}” just sold out. Please update your cart.` };
+      return { ok: false, error: fill(t.errSoldOut, { name: v ? `${p.name} (${v.name})` : p.name }) };
     }
     reserved.push({ productId: p.id, variantId: v?.id, qty: i.qty });
   }

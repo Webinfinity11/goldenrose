@@ -14,7 +14,7 @@ const img = (f: string) => `/img/gr/${f}`;
 const tree: Cat[] = [
   {
     name: "Face",
-    image: img("tr_img_1_91.jpg"),
+    image: img("tr_img_1_91.webp"),
     children: [
       ["Blush", ["Powder Blush", "Liquid Blush", "Stick Blush"]],
       ["Highlighter", ["Stick Highlighter", "Powder Highlighter", "Liquid Highlighter"]],
@@ -28,7 +28,7 @@ const tree: Cat[] = [
   },
   {
     name: "Eyes",
-    image: img("tr_img_1_92.jpg"),
+    image: img("tr_img_1_92.webp"),
     children: [
       ["Eyeliner", ["Liquid Eyeliner", "Colored Eyeliner", "Waterproof Eyeliner"]],
       ["Eyeshadow", ["Matte Eyeshadow", "Shimmer Eyeshadow", "Eyeshadow Palette"]],
@@ -39,7 +39,7 @@ const tree: Cat[] = [
   },
   {
     name: "Lips",
-    image: img("tr_img_1_52.jpg"),
+    image: img("tr_img_1_52.webp"),
     children: [
       ["Lip Gloss", ["Fruity Lip Gloss", "Shimmer Lip Gloss"]],
       ["Lipstick", ["Liquid Lipstick", "Matte Pencil Lipstick", "Matte Lipstick", "Glossy Lipstick"]],
@@ -48,14 +48,14 @@ const tree: Cat[] = [
       "Lip Oil",
     ],
   },
-  { name: "Nails", image: img("tr_img_1_53.jpg"), children: [["Nail Polish", ["Glitter Nail Polish", "Glossy Nail Polish"]], "Nail Care"] },
-  { name: "Skin Care", image: img("tr_img_1_75.jpg"), children: ["Face Care", "Hair Care"] },
-  { name: "Accessories", image: img("tr_img_1_54.jpg"), children: ["False Lashes", "Makeup Brushes", "Makeup Sponges", "Other Accessories"] },
-  { name: "Fragrance", image: img("tr_img_1_67.jpg"), children: ["Men's Fragrance", "Women's Fragrance", "Unisex Fragrance"] },
-  { name: "Collections", image: img("tr_img_1_70.jpg"), children: ["Nude Look", "Miss Beauty", "Mood Collection"] },
+  { name: "Nails", image: img("tr_img_1_53.webp"), children: [["Nail Polish", ["Glitter Nail Polish", "Glossy Nail Polish"]], "Nail Care"] },
+  { name: "Skin Care", image: img("tr_img_1_75.webp"), children: ["Face Care", "Hair Care"] },
+  { name: "Accessories", image: img("tr_img_1_54.webp"), children: ["False Lashes", "Makeup Brushes", "Makeup Sponges", "Other Accessories"] },
+  { name: "Fragrance", image: img("tr_img_1_67.webp"), children: ["Men's Fragrance", "Women's Fragrance", "Unisex Fragrance"] },
+  { name: "Collections", image: img("tr_img_1_70.webp"), children: ["Nude Look", "Miss Beauty", "Mood Collection"] },
   { name: "Sets", children: [] },
   { name: "Mini Products", children: [] },
-  { name: "Emily", image: img("tr_img_1_96.jpg"), children: ["Emily Lip Pencil", "Emily Eye Pencil"] },
+  { name: "Emily", image: img("tr_img_1_96.webp"), children: ["Emily Lip Pencil", "Emily Eye Pencil"] },
 ];
 
 type Seed = {

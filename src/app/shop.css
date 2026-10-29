@@ -10,8 +10,8 @@ html:has(.gr-shop) {
   --line: #eee8e5;
   --bg: #fff7f4;
   --orange: #fa8072;
-  --font: var(--font-open-sans), Arial, sans-serif;
-  --font-head: var(--font-open-sans), Arial, sans-serif;
+  --font: var(--font-open-sans), var(--font-body), Arial, sans-serif;
+  --font-head: var(--font-open-sans), var(--font-body), Arial, sans-serif;
 }
 .gr-shop h1, .gr-shop h2, .gr-shop h3 { letter-spacing: 0; }
 .gr-shop .section-title, .gr-shop .pagehero h1, .gr-shop .pagehead h1, .gr-shop .sectiontitle h2, .gr-shop .pdp-info h1 { font-family: var(--font-head); font-weight: 600; }
@@ -152,6 +152,15 @@ body.has-overlay { overflow: hidden; }
 /* language dropdown opens over the category menu below it */
 .header-main { position: relative; z-index: 45; }
 .language-menu { z-index: 50; white-space: nowrap; border-radius: 6px; }
+.language-menu { padding: 8px 0; min-width: 140px; }
+.language-menu a { display: block; padding: 8px 18px; font-size: 13px; }
+.language-menu a:hover, .language-menu a[aria-current] { color: var(--accent); }
+/* GE / EN / RU row: only in the mobile menu */
+.nav-item.mobile-langs { display: none; }
+.lang-links { display: flex; gap: 8px; padding: 10px 5px; }
+.lang-links a { padding: 6px 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 12px; font-weight: 600; }
+.lang-links a[aria-current] { border-color: var(--accent); color: var(--accent); }
+@media (max-width: 991px) { .nav-item.mobile-langs { display: block; width: 100%; } }
 /* WhatsApp button: a touch larger, sitting low above the back-to-top button */
 .whatsapp-button { width: 56px; height: 56px; top: auto; bottom: 64px; }
 .whatsapp-button svg { width: 28px; height: 28px; }

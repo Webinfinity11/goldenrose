@@ -3,10 +3,12 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GrIcon } from "@/components/gr/GrIcon";
+import { useT } from "@/i18n/client";
 
 /** Burger button (≤991px) that opens the category list under the header. */
 export function MobileMenuButton() {
   const pathname = usePathname();
+  const { layout: t } = useT();
   // Open for the page it was opened on, so navigating closes it.
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn === pathname;
@@ -23,7 +25,7 @@ export function MobileMenuButton() {
     <button
       type="button"
       className="mobile-menu-button icon-button"
-      aria-label={open ? "Close menu" : "Open menu"}
+      aria-label={open ? t.closeMenu : t.openMenu}
       aria-expanded={open}
       aria-controls="site-nav"
       onClick={() => setOpen(!open)}
@@ -36,6 +38,7 @@ export function MobileMenuButton() {
 /** Round "back to top" button that appears after scrolling down. */
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
+  const { layout: t } = useT();
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 500);
     onScroll();
@@ -46,7 +49,7 @@ export function BackToTop() {
     <button
       type="button"
       className={visible ? "back-to-top visible" : "back-to-top"}
-      aria-label="Back to top"
+      aria-label={t.backToTop}
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
     >
       <GrIcon name="up" size={18} />

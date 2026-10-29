@@ -13,7 +13,8 @@ import { admins, categories, db, orders, productCategories, products, settings, 
 import { ORDER_STATUSES, slugify } from "@/lib/admin-shared";
 import { adjustStock } from "@/lib/stock";
 import { sanitizeSection } from "@/lib/content";
-import { contentDefaults, HOME_CATEGORIES_KEY, type ContentKey } from "@/lib/content-schema";
+import { contentDefaults, contentRowKey, HOME_CATEGORIES_KEY, type ContentKey } from "@/lib/content-schema";
+import { defaultLocale, isLocale } from "@/i18n/config";
 import { createSession, destroySession, requireAdmin } from "@/lib/auth";
 
 export type ActionResult = { ok: true; id?: number } | { ok: false; error: string };
@@ -78,6 +79,21 @@ export async function uploadImage(form: FormData): Promise<{ ok: true; url: stri
 const imageUrl = z.string().trim().max(1000).regex(/^(https:\/\/|\/)/);
 
 const money = z.coerce.number().min(0).max(1_000_000);
+
+// English/Russian texts of a product or category; empty fields are dropped so the Georgian text shows.
+const translations = <F extends string>(fields: Record<F, number>) => {
+  const one = z.object(Object.fromEntries(Object.entries(fields).map(([k, max]) => [k, z.string().max(max as number).optional()])) as Record<F, z.ZodOptional<z.ZodString>>);
+  return z
+    .object({ en: one.optional(), ru: one.optional() })
+    .default({})
+    .transform((t) =>
+      Object.fromEntries(
+        Object.entries(t)
+          .map(([lang, texts]) => [lang, Object.fromEntries(Object.entries(texts ?? {}).map(([k, v]) => [k, String(v ?? "").trim()]).filter(([, v]) => v))])
+          .filter(([, texts]) => Object.keys(texts).length),
+      ) as Partial<Record<"en" | "ru", Partial<Record<F, string>>>>,
+    );
+};
 const productSchema = z.object({
   name: z.string().trim().min(2, "მიუთითეთ დასახელება").max(200),
   slug: z.string().trim().max(100).optional(),
@@ -96,6 +112,7 @@ const productSchema = z.object({
   volume: z.string().trim().max(40).optional(),
   country: z.string().trim().max(60).optional(),
   specs: z.array(z.object({ label: z.string().trim().max(80), value: z.string().trim().max(200) })).max(40),
+  i18n: translations({ name: 200, summary: 5000, description: 20000, country: 60 }),
   images: z.array(imageUrl).max(12),
   variants: z
     .array(
@@ -166,6 +183,7 @@ export async function saveProduct(id: number | null, input: ProductInput): Promi
     volume: d.volume || null,
     country: d.country || null,
     specs: d.specs.filter((s) => s.label && s.value),
+    i18n: d.i18n,
     images: d.images,
     updatedAt: new Date(),
   };
@@ -243,6 +261,7 @@ const categorySchema = z.object({
   description: z.string().max(2000),
   image: z.union([imageUrl, z.string().regex(/^\/[^/]/), z.literal(""), z.null()]),
   sortOrder: z.coerce.number().int().min(-1000).max(1000),
+  i18n: translations({ name: 120, description: 2000 }),
 });
 export type CategoryInput = z.input<typeof categorySchema>;
 
@@ -266,6 +285,7 @@ export async function saveCategory(id: number | null, input: CategoryInput): Pro
     description: d.description.trim(),
     image: d.image || null,
     sortOrder: d.sortOrder,
+    i18n: d.i18n,
   };
   let categoryId = id;
   if (id) await db.update(categories).set(values).where(eq(categories.id, id));
@@ -306,13 +326,14 @@ export async function setOrderStatus(id: number, status: string): Promise<Action
 
 // ───────── site content ─────────
 
-export async function saveContent(key: string, value: unknown): Promise<ActionResult> {
+export async function saveContent(key: string, value: unknown, lang: string = defaultLocale): Promise<ActionResult> {
   await requireAdmin();
-  if (!(key in contentDefaults)) return fail("უცნობი სექცია");
+  if (!(key in contentDefaults) || !isLocale(lang)) return fail("უცნობი სექცია");
   const clean = sanitizeSection(key as ContentKey, value);
+  const rowKey = contentRowKey(key as ContentKey, lang);
   await db
     .insert(settings)
-    .values({ key, value: clean })
+    .values({ key: rowKey, value: clean })
     .onConflictDoUpdate({ target: settings.key, set: { value: clean, updatedAt: new Date() } });
   updateTag("content");
   return { ok: true };
@@ -329,10 +350,10 @@ export async function saveHomeCategories(ids: number[]): Promise<ActionResult> {
   return { ok: true };
 }
 
-export async function resetContent(key: string): Promise<ActionResult> {
+export async function resetContent(key: string, lang: string = defaultLocale): Promise<ActionResult> {
   await requireAdmin();
-  if (!(key in contentDefaults)) return fail("უცნობი სექცია");
-  await db.delete(settings).where(eq(settings.key, key));
+  if (!(key in contentDefaults) || !isLocale(lang)) return fail("უცნობი სექცია");
+  await db.delete(settings).where(eq(settings.key, contentRowKey(key as ContentKey, lang)));
   updateTag("content");
   return { ok: true };
 }

@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { CardAddButton, FavButton } from "@/components/cart/CartUI";
+import { fill } from "@/i18n";
+import { useT } from "@/i18n/client";
 import type { ProductCard as Card } from "@/lib/data";
 import { LOW_STOCK, discount, finalPrice, gel, productUrl } from "@/lib/format";
 
@@ -8,6 +12,7 @@ const sizes = "(max-width: 600px) 45vw, (max-width: 991px) 30vw, 280px";
 
 /** Product card of the Golden Rose design: photo with hover swap, New badge, favourite, name, prices and the round basket button. */
 export function ProductCard({ p, priority }: { p: Card; priority?: boolean }) {
+  const t = useT();
   // A product with colors shows and adds its first available one.
   const v = p.defaultVariant;
   const unit = v ?? p;
@@ -30,18 +35,18 @@ export function ProductCard({ p, priority }: { p: Card; priority?: boolean }) {
           {p.image ? (
             <Image src={p.image} alt={p.name} fill sizes={sizes} priority={priority} />
           ) : (
-            <span className="product-noimg">No photo</span>
+            <span className="product-noimg">{t.catalog.noPhoto}</span>
           )}
           {p.hoverImage && <Image className="product-alt" src={p.hoverImage} alt="" fill sizes={sizes} />}
         </Link>
-        {p.isNew && <span className="new-badge">New</span>}
+        {p.isNew && <span className="new-badge">{t.catalog.new}</span>}
         <FavButton item={item} className="favorite-button" />
       </div>
       <div className="product-info">
         <Link className="product-name" href={href}>
           {p.name}
         </Link>
-        {p.variantCount > 1 && !p.variantCard && <span className="product-colors">{p.variantCount} colors</span>}
+        {p.variantCount > 1 && !p.variantCard && <span className="product-colors">{fill(t.catalog.colors, { n: p.variantCount })}</span>}
         <div className="product-bottom">
           <div className="prices">
             {off > 0 && <span className="old-price">{gel(unit.price)}</span>}
@@ -49,12 +54,12 @@ export function ProductCard({ p, priority }: { p: Card; priority?: boolean }) {
               <span className="price">{gel(price)}</span>
               {off > 0 && (
                 <span className="discount-badge">
-                  <b>−{off}%</b> OFF
+                  <b>−{off}%</b> {t.catalog.off}
                 </span>
               )}
             </div>
           </div>
-          {p.inStock ? <CardAddButton item={item} /> : <span className="product-out">Out of stock</span>}
+          {p.inStock ? <CardAddButton item={item} /> : <span className="product-out">{t.catalog.outOfStock}</span>}
         </div>
       </div>
     </article>
@@ -72,7 +77,8 @@ export function ProductGrid({ items }: { items: Card[] }) {
 }
 
 export function StockLabel({ inStock, stockQty }: { inStock: boolean; stockQty: number | null }) {
-  if (!inStock) return <span className="stock out">Out of stock</span>;
-  if (stockQty != null && stockQty <= LOW_STOCK) return <span className="stock low">Only {stockQty} left</span>;
-  return <span className="stock">In stock</span>;
+  const t = useT();
+  if (!inStock) return <span className="stock out">{t.catalog.outOfStock}</span>;
+  if (stockQty != null && stockQty <= LOW_STOCK) return <span className="stock low">{fill(t.catalog.onlyLeft, { n: stockQty })}</span>;
+  return <span className="stock">{t.catalog.inStock}</span>;
 }

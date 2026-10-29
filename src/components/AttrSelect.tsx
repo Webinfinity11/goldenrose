@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 /** Compact dropdown for one product attribute filter (brand, country); empty value clears it. */
-export function AttrSelect({ name, label, value, options }: { name: string; label: string; value?: string; options: string[] }) {
+export function AttrSelect({ name, label, allLabel, value, options }: { name: string; label: string; allLabel: string; value?: string; options: string[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -21,7 +21,7 @@ export function AttrSelect({ name, label, value, options }: { name: string; labe
         router.push(qs ? `${pathname}?${qs}` : pathname);
       }}
     >
-      <option value="">{label}: All</option>
+      <option value="">{allLabel}</option>
       {options.map((o) => (
         <option key={o} value={o}>
           {o}

@@ -1,6 +1,21 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { and, asc, desc, eq, ilike, inArray, isNotNull, or, sql, type SQL } from "drizzle-orm";
 import { db, categories, products, productCategories, variants, type Category, type Product, type Variant } from "@/db";
+import { defaultLocale, type Locale } from "@/i18n/config";
+import { getLocale } from "@/i18n/server";
+
+/** A product/category text in the given language: its translation, or the Georgian column when there is none. */
+function tr<F extends string>(row: { i18n: Partial<Record<"en" | "ru", Partial<Record<F, string>>>> } & Record<F, unknown>, field: F, lang: Locale) {
+  const own = row[field] as string;
+  if (lang === defaultLocale) return own;
+  return row.i18n?.[lang as "en" | "ru"]?.[field]?.trim() || own;
+}
+
+/** A product with its texts in the given language. */
+export function localizeProduct<P extends Product>(p: P, lang: Locale): P {
+  if (lang === defaultLocale) return p;
+  return { ...p, name: tr(p, "name", lang), summary: tr(p, "summary", lang), description: tr(p, "description", lang), country: p.country && tr(p as P & { country: string }, "country", lang) };
+}
 
 /** Products added within this many days get the "ახალი" badge. */
 const NEW_DAYS = 14;
@@ -60,11 +75,12 @@ export const PER_PAGE = 24;
 
 const effectivePrice = sql`coalesce(${products.salePrice}, ${products.price})`;
 
-/** Whole category tree with published-product counts rolled up to every ancestor. */
-export async function getCategoryTree() {
+/** Whole category tree (names in the request language, or `locale`) with published-product counts rolled up to every ancestor. */
+export async function getCategoryTree(locale?: Locale) {
   "use cache";
   cacheLife("hours");
   cacheTag("categories", "products");
+  const lang = locale ?? (await getLocale());
 
   const [rows, links] = await Promise.all([
     db.select().from(categories).orderBy(asc(categories.sortOrder), asc(categories.name)),
@@ -75,7 +91,9 @@ export async function getCategoryTree() {
       .where(eq(products.published, true)),
   ]);
 
-  const byId = new Map<number, CategoryNode>(rows.map((c) => [c.id, { ...c, count: 0, children: [] }]));
+  const byId = new Map<number, CategoryNode>(
+    rows.map((c) => [c.id, { ...c, name: tr(c, "name", lang), description: tr(c, "description", lang), count: 0, children: [] }]),
+  );
   const roots: CategoryNode[] = [];
   for (const node of byId.values()) {
     const parent = node.parentId ? byId.get(node.parentId) : undefined;
@@ -105,8 +123,8 @@ export function flattenTree(nodes: CategoryNode[]): CategoryNode[] {
   return nodes.flatMap((n) => [n, ...flattenTree(n.children)]);
 }
 
-export async function getCategory(slug: string) {
-  const all = flattenTree(await getCategoryTree());
+export async function getCategory(slug: string, locale?: Locale) {
+  const all = flattenTree(await getCategoryTree(locale));
   const category = all.find((c) => c.slug === slug);
   if (!category) return null;
   const trail: CategoryNode[] = [];
@@ -126,6 +144,8 @@ export type ProductQuery = {
   maxPrice?: number;
   brand?: string;
   collection?: string;
+  /** Language of names in the result; defaults to the request language (route handlers must pass it). */
+  lang?: Locale;
 };
 
 export async function getProducts(query: ProductQuery) {
@@ -134,6 +154,7 @@ export async function getProducts(query: ProductQuery) {
   cacheTag("products");
 
   const { categoryIds, q, sort = "default", page = 1, sale, inStock, priced, minPrice, maxPrice, brand, collection } = query;
+  const lang = query.lang ?? (await getLocale());
   const where: (SQL | undefined)[] = [eq(products.published, true)];
   if (categoryIds?.length) {
     where.push(
@@ -179,12 +200,12 @@ export async function getProducts(query: ProductQuery) {
     db.select({ total: sql<number>`count(*)::int` }).from(products).where(filter),
   ]);
 
-  return { items: await toCards(rows), total, pages: Math.max(1, Math.ceil(total / PER_PAGE)) };
+  return { items: await toCards(rows, lang), total, pages: Math.max(1, Math.ceil(total / PER_PAGE)) };
 }
 
-async function toCards(rows: Product[]): Promise<ProductCard[]> {
+async function toCards(rows: Product[], lang: Locale): Promise<ProductCard[]> {
   if (!rows.length) return [];
-  const all = flattenTree(await getCategoryTree());
+  const all = flattenTree(await getCategoryTree(lang));
   const links = await db
     .select()
     .from(productCategories)
@@ -210,7 +231,7 @@ async function toCards(rows: Product[]): Promise<ProductCard[]> {
       .sort((a, b) => depth(b.categoryId) - depth(a.categoryId))[0];
     return {
       id: p.id,
-      name: p.name,
+      name: tr(p, "name", lang),
       slug: p.slug,
       sku: p.sku,
       price: p.price,
@@ -241,9 +262,10 @@ export async function getProduct(slug: string) {
     .from(products)
     .where(and(eq(products.slug, slug), eq(products.published, true)));
   if (!product) return null;
+  const lang = await getLocale();
 
   const links = await db.select().from(productCategories).where(eq(productCategories.productId, product.id));
-  const all = flattenTree(await getCategoryTree());
+  const all = flattenTree(await getCategoryTree(lang));
   const linked = links.map((l) => all.find((c) => c.id === l.categoryId)).filter((c): c is CategoryNode => !!c);
   const primary = linked.sort((a, b) => (b.parentId ? 1 : 0) - (a.parentId ? 1 : 0))[0] ?? null;
   const trail = primary ? (await getCategory(primary.slug))!.trail : [];
@@ -253,7 +275,7 @@ export async function getProduct(slug: string) {
     : [];
 
   const options = (await variantsOf([product.id])).map((v) => resolveVariant(v, product));
-  return { product, variants: options, categories: linked, trail, related };
+  return { product: localizeProduct(product, lang), variants: options, categories: linked, trail, related };
 }
 
 /**
@@ -311,7 +333,7 @@ export async function getHomeProducts() {
     .where(and(eq(products.published, true), eq(products.inStock, true)))
     .orderBy(desc(products.featured), desc(products.createdAt), asc(products.id))
     .limit(24);
-  return toCards(rows);
+  return toCards(rows, await getLocale());
 }
 
 export async function getHomeSections() {

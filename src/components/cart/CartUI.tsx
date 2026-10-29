@@ -1,19 +1,23 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { GrIcon } from "@/components/gr/GrIcon";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { fill } from "@/i18n";
+import { useT } from "@/i18n/client";
 import { gel, productUrl } from "@/lib/format";
 import { MAX_QTY, useCart, type CartItem, type FavItem } from "./CartProvider";
 
 export function Stepper({ value, onChange, label, max = MAX_QTY }: { value: number; onChange: (n: number) => void; label: string; max?: number }) {
   const [draft, setDraft] = useState(String(value));
+  const { layout: t } = useT();
   useEffect(() => setDraft(String(value)), [value]);
   return (
     <div className="stepper">
-      <button type="button" onClick={() => onChange(value - 1)} disabled={value <= 1} aria-label="Decrease quantity">
+      <button type="button" onClick={() => onChange(value - 1)} disabled={value <= 1} aria-label={t.decrease}>
         −
       </button>
       <input
@@ -22,12 +26,12 @@ export function Stepper({ value, onChange, label, max = MAX_QTY }: { value: numb
         min={1}
         max={max}
         value={draft}
-        aria-label={`Quantity: ${label}`}
+        aria-label={fill(t.quantityFor, { name: label })}
         onChange={(e) => setDraft(e.target.value)}
         onBlur={() => onChange(Number(draft))}
         onKeyDown={(e) => e.key === "Enter" && onChange(Number(draft))}
       />
-      <button type="button" onClick={() => onChange(value + 1)} disabled={value >= max} aria-label="Increase quantity">
+      <button type="button" onClick={() => onChange(value + 1)} disabled={value >= max} aria-label={t.increase}>
         +
       </button>
     </div>
@@ -37,6 +41,7 @@ export function Stepper({ value, onChange, label, max = MAX_QTY }: { value: numb
 export function AddToCart({ item, size, disabled }: { item: CartItem; size?: "lg"; disabled?: boolean }) {
   const { add } = useCart();
   const [qty, setQty] = useState(1);
+  const { layout: t } = useT();
   const max = Math.min(MAX_QTY, item.max ?? MAX_QTY);
   const clamp = (n: number) => Math.min(max, Math.max(1, Math.floor(n) || 1));
   return (
@@ -47,11 +52,11 @@ export function AddToCart({ item, size, disabled }: { item: CartItem; size?: "lg
         className={size === "lg" ? "add" : "add add-icon"}
         onClick={() => add(item, qty)}
         disabled={disabled}
-        aria-label={`Add to cart: ${item.name}${item.variant ? ` (${item.variant})` : ""}`}
-        title="Add to cart"
+        aria-label={fill(t.addToCartFor, { name: `${item.name}${item.variant ? ` (${item.variant})` : ""}` })}
+        title={t.addToCart}
       >
         <Icon name="cart" />
-        {size === "lg" && (disabled ? "Out of Stock" : "Add to Cart")}
+        {size === "lg" && (disabled ? t.outOfStock : t.addToCart)}
       </button>
     </div>
   );
@@ -60,12 +65,13 @@ export function AddToCart({ item, size, disabled }: { item: CartItem; size?: "lg
 export function FavButton({ item, className = "heart" }: { item: FavItem; className?: string }) {
   const { isFav, toggleFav } = useCart();
   const liked = isFav(item.id);
+  const { layout: t } = useT();
   return (
     <button
       type="button"
       className={liked ? `${className} liked is-active` : className}
       aria-pressed={liked}
-      aria-label={liked ? `Remove from favorites: ${item.name}` : `Add to favorites: ${item.name}`}
+      aria-label={fill(liked ? t.removeFavFor : t.addFavFor, { name: item.name })}
       onClick={() => toggleFav(item)}
     >
       <Icon name="heart" />
@@ -76,8 +82,9 @@ export function FavButton({ item, className = "heart" }: { item: FavItem; classN
 /** The round basket button of a product card: adds one item. */
 export function CardAddButton({ item }: { item: CartItem }) {
   const { add } = useCart();
+  const { layout: t } = useT();
   return (
-    <button className="add-button" type="button" onClick={() => add(item, 1)} aria-label={`Add to cart: ${item.name}`}>
+    <button className="add-button" type="button" onClick={() => add(item, 1)} aria-label={fill(t.addToCartFor, { name: item.name })}>
       <GrIcon name="basket" />
     </button>
   );
@@ -86,28 +93,23 @@ export function CardAddButton({ item }: { item: CartItem }) {
 /** Right side of the header: language, account, favourites and cart, as in the design. */
 export function HeaderCounters() {
   const { count, favs, setDrawerOpen, notify } = useCart();
+  const { layout: t } = useT();
   return (
     <div className="header-actions">
-      <div className="language-wrap">
-        <button type="button" className="language-button" aria-label="Language and currency">
-          EN − GEL <GrIcon name="down" size={12} />
-          <UsFlag />
-        </button>
-        <div className="language-menu">English · Georgian Lari (₾)</div>
-      </div>
+      <LanguageSwitcher />
       <button
         type="button"
         className="account-button"
-        onClick={() => notify("Customer accounts are coming soon. You can already order without registering.")}
+        onClick={() => notify(t.accountsSoon)}
       >
         <GrIcon name="user" size={18} />
-        <span>Login / Register</span>
+        <span>{t.login}</span>
       </button>
-      <Link className="icon-button round-button" href="/favorites" aria-label="My favorites">
+      <Link className="icon-button round-button" href="/favorites" aria-label={t.myFavorites}>
         <GrIcon name="heart" size={18} />
         {favs.length > 0 && <span className="count-badge">{favs.length}</span>}
       </Link>
-      <button className="icon-button round-button basket-button" onClick={() => setDrawerOpen(true)} aria-label={`My cart: ${count} items`}>
+      <button className="icon-button round-button basket-button" onClick={() => setDrawerOpen(true)} aria-label={fill(t.myCartCount, { n: count })}>
         <GrIcon name="basket" size={19} />
         <span className="count-badge">{count}</span>
       </button>
@@ -115,24 +117,10 @@ export function HeaderCounters() {
   );
 }
 
-function UsFlag() {
-  return (
-    <svg className="flag" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <clipPath id="flag-circle">
-        <circle cx="8" cy="8" r="8" />
-      </clipPath>
-      <g clipPath="url(#flag-circle)">
-        <rect width="16" height="16" fill="#fff" />
-        {[0, 2, 4, 6, 8, 10, 12, 14].map((y, i) => i % 2 === 0 && <rect key={y} y={y * 1.14} width="16" height="1.23" fill="#d22f3c" />)}
-        <rect width="8" height="8.6" fill="#22408c" />
-      </g>
-    </svg>
-  );
-}
-
 export function CartDrawer() {
   const { lines, count, total, drawerOpen, setDrawerOpen, setQty, remove, clear } = useCart();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const { layout: t } = useT();
 
   useEffect(() => {
     if (!drawerOpen) return;
@@ -161,19 +149,19 @@ export function CartDrawer() {
       >
         <div className="drawer-header">
           <h2 id="cart-title">
-            My Cart <span>{count}</span>
+            {t.cart} <span>{count}</span>
           </h2>
-          <button ref={closeRef} className="icon-button" onClick={close} aria-label="Close cart">
+          <button ref={closeRef} className="icon-button" onClick={close} aria-label={t.closeCart}>
             <Icon name="close" />
           </button>
         </div>
         {lines.length === 0 ? (
           <div className="drawer-empty">
             <Icon name="cart" />
-            <h3>Your cart is empty</h3>
-            <p>Discover our newest makeup and care products and add your favorites to the cart.</p>
+            <h3>{t.cartEmpty}</h3>
+            <p>{t.cartEmptyText}</p>
             <Link className="button button-primary" href="/catalog" onClick={close}>
-              Continue Shopping
+              {t.continueShopping}
             </Link>
           </div>
         ) : (
@@ -196,7 +184,7 @@ export function CartDrawer() {
                     <p className="cart-item-price">{gel(l.price * l.qty)}</p>
                     <QtyControl value={l.qty} max={l.max} label={l.name} onChange={(n) => setQty(l.key, n)} />
                   </div>
-                  <button className="cart-remove" type="button" onClick={() => remove(l.key)} aria-label={`Remove from cart: ${l.name}`}>
+                  <button className="cart-remove" type="button" onClick={() => remove(l.key)} aria-label={fill(t.removeFromCart, { name: l.name })}>
                     <Icon name="trash" />
                   </button>
                 </article>
@@ -204,19 +192,19 @@ export function CartDrawer() {
             </div>
             <div className="cart-summary">
               <div className="cart-total-row">
-                <span>Total</span>
+                <span>{t.total}</span>
                 <strong>{gel(total)}</strong>
               </div>
               <div className="drawer-actions">
                 <Link className="button button-secondary" href="/cart" onClick={close}>
-                  View Cart
+                  {t.viewCart}
                 </Link>
                 <Link className="button button-primary" href="/checkout" onClick={close}>
-                  Checkout
+                  {t.checkout}
                 </Link>
               </div>
               <button className="subtle-button" type="button" onClick={clear}>
-                Clear Cart
+                {t.clearCart}
               </button>
             </div>
           </>
@@ -229,10 +217,11 @@ export function CartDrawer() {
 /** − [n] + control in the drawer, as in the design. */
 function QtyControl({ value, max = MAX_QTY, label, onChange }: { value: number; max?: number; label: string; onChange: (n: number) => void }) {
   const [draft, setDraft] = useState(String(value));
+  const { layout: t } = useT();
   useEffect(() => setDraft(String(value)), [value]);
   return (
     <div className="quantity-control">
-      <button type="button" onClick={() => onChange(value - 1)} disabled={value <= 1} aria-label={`Decrease quantity: ${label}`}>
+      <button type="button" onClick={() => onChange(value - 1)} disabled={value <= 1} aria-label={fill(t.decreaseFor, { name: label })}>
         <Icon name="minus" />
       </button>
       <input
@@ -241,12 +230,12 @@ function QtyControl({ value, max = MAX_QTY, label, onChange }: { value: number; 
         min={1}
         max={max}
         value={draft}
-        aria-label={`Quantity: ${label}`}
+        aria-label={fill(t.quantityFor, { name: label })}
         onChange={(e) => setDraft(e.target.value)}
         onBlur={() => onChange(Number(draft))}
         onKeyDown={(e) => e.key === "Enter" && onChange(Number(draft))}
       />
-      <button type="button" onClick={() => onChange(value + 1)} disabled={value >= max} aria-label={`Increase quantity: ${label}`}>
+      <button type="button" onClick={() => onChange(value + 1)} disabled={value >= max} aria-label={fill(t.increaseFor, { name: label })}>
         <Icon name="plus" />
       </button>
     </div>

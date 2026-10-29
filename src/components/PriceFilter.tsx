@@ -3,11 +3,13 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Icon } from "@/components/Icon";
+import { useT } from "@/i18n/client";
 
 export function PriceFilter({ min, max }: { min?: number; max?: number }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const t = useT();
   const [from, setFrom] = useState(min ? String(min) : "");
   const [to, setTo] = useState(max ? String(max) : "");
 
@@ -31,18 +33,18 @@ export function PriceFilter({ min, max }: { min?: number; max?: number }) {
         apply(from, to);
       }}
     >
-      <span>Price ₾</span>
-      <input inputMode="decimal" placeholder="From" value={from} onChange={(e) => setFrom(e.target.value)} aria-label="Minimum price" />
+      <span>{t.catalog.price}</span>
+      <input inputMode="decimal" placeholder={t.catalog.from} value={from} onChange={(e) => setFrom(e.target.value)} aria-label={t.catalog.minPrice} />
       <i>-</i>
-      <input inputMode="decimal" placeholder="To" value={to} onChange={(e) => setTo(e.target.value)} aria-label="Maximum price" />
-      <button type="submit" aria-label="Apply price filter">
+      <input inputMode="decimal" placeholder={t.catalog.to} value={to} onChange={(e) => setTo(e.target.value)} aria-label={t.catalog.maxPrice} />
+      <button type="submit" aria-label={t.catalog.applyPrice}>
         <Icon name="check" />
       </button>
       {(min || max) && (
         <button
           type="button"
           className="clear"
-          aria-label="Clear price filter"
+          aria-label={t.catalog.clearPrice}
           onClick={() => {
             setFrom("");
             setTo("");

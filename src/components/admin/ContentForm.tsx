@@ -10,7 +10,7 @@ import { ImageUploader } from "./ImageUploader";
 type Value = Record<string, unknown>;
 type Row = Record<string, string>;
 
-export function ContentForm({ sectionKey, fields, initial }: { sectionKey: string; fields: FieldSpec[]; initial: Value }) {
+export function ContentForm({ sectionKey, fields, initial, lang }: { sectionKey: string; fields: FieldSpec[]; initial: Value; lang: string }) {
   const router = useRouter();
   const [value, setValue] = useState<Value>(initial);
   const [pending, start] = useTransition();
@@ -20,7 +20,7 @@ export function ContentForm({ sectionKey, fields, initial }: { sectionKey: strin
   const save = () =>
     start(async () => {
       setMessage(null);
-      const res = await saveContent(sectionKey, value);
+      const res = await saveContent(sectionKey, value, lang);
       setMessage(res.ok ? { ok: true, text: "შენახულია ✓ საიტზე უკვე ჩანს." } : { ok: false, text: res.error });
       if (res.ok) router.refresh();
     });
@@ -28,7 +28,7 @@ export function ContentForm({ sectionKey, fields, initial }: { sectionKey: strin
   const reset = () => {
     if (!confirm("დაბრუნდეს საწყისი ტექსტები? ამ სექციის ცვლილებები წაიშლება.")) return;
     start(async () => {
-      await resetContent(sectionKey);
+      await resetContent(sectionKey, lang);
       router.refresh();
       setMessage({ ok: true, text: "საწყისი ტექსტები დაბრუნდა." });
       window.location.reload();

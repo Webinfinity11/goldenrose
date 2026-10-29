@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Icon } from "@/components/Icon";
+import { useT } from "@/i18n/client";
 
 /**
  * Horizontal product row with prev/next arrows instead of a scrollbar.
  * With `toolbar`, the arrows sit at the right end of a row above the cards instead of over their edges.
  */
 export function RailScroller({ children, toolbar }: { children: ReactNode; toolbar?: ReactNode }) {
+  const t = useT();
   const ref = useRef<HTMLDivElement>(null);
   const [edges, setEdges] = useState({ start: true, end: false });
 
@@ -34,10 +36,10 @@ export function RailScroller({ children, toolbar }: { children: ReactNode; toolb
         <div className="rail-toolbar">
           <div className="rail-toolbar-main">{toolbar}</div>
           <div className="rail-nav">
-            <button className="rail-nav-btn" onClick={() => go(-1)} disabled={edges.start} aria-label="Previous">
+            <button className="rail-nav-btn" onClick={() => go(-1)} disabled={edges.start} aria-label={t.catalog.previous}>
               <Icon name="left" />
             </button>
-            <button className="rail-nav-btn" onClick={() => go(1)} disabled={edges.end} aria-label="Next">
+            <button className="rail-nav-btn" onClick={() => go(1)} disabled={edges.end} aria-label={t.catalog.next}>
               <Icon name="right" />
             </button>
           </div>
@@ -50,13 +52,13 @@ export function RailScroller({ children, toolbar }: { children: ReactNode; toolb
 
   return (
     <div className="rail-wrap">
-      <button className="rail-arrow prev" onClick={() => go(-1)} disabled={edges.start} aria-label="Previous">
+      <button className="rail-arrow prev" onClick={() => go(-1)} disabled={edges.start} aria-label={t.catalog.previous}>
         <Icon name="left" />
       </button>
       <div className="rail" ref={ref} onScroll={update}>
         {children}
       </div>
-      <button className="rail-arrow next" onClick={() => go(1)} disabled={edges.end} aria-label="Next">
+      <button className="rail-arrow next" onClick={() => go(1)} disabled={edges.end} aria-label={t.catalog.next}>
         <Icon name="right" />
       </button>
     </div>

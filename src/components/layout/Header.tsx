@@ -1,16 +1,19 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { HeaderCounters } from "@/components/cart/CartUI";
 import { getCategoryTree, type CategoryNode } from "@/lib/data";
 import { getContent } from "@/lib/content";
 import { categoryUrl } from "@/lib/format";
 import { site as brand } from "@/lib/site";
+import { fill } from "@/i18n";
+import { getT } from "@/i18n/server";
+import { LanguageLinks } from "./LanguageSwitcher";
 import { MobileMenuButton } from "./MobileMenu";
 import { SearchBox } from "./SearchBox";
 
 export async function Header() {
   "use cache";
-  const [tree, { header }] = await Promise.all([getCategoryTree(), getContent()]);
+  const [tree, { header }, t] = await Promise.all([getCategoryTree(), getContent(), getT()]);
   // The ticker scrolls by half its width, so the texts are repeated to fill it seamlessly.
   const ticker = Array.from({ length: 4 }, () => header.announcements).flat();
   // As on the original site: category menus up to Collections, then Outlet and the extra links, then the rest.
@@ -35,20 +38,20 @@ export async function Header() {
       <header className="site-header">
         <div className="container header-main">
           <MobileMenuButton />
-          <Link className="logo" href="/" aria-label={`${brand.name} home`}>
-            <Image src="/img/gr/logo.png" alt="Golden Rose — Look at the bright side" width={300} height={60} priority />
+          <Link className="logo" href="/" aria-label={fill(t.layout.homeLink, { name: brand.name })}>
+            <Image src="/img/gr/logo.webp" alt={t.layout.logoAlt} width={300} height={60} priority />
           </Link>
           <SearchBox placeholder={header.searchPlaceholder} />
           <HeaderCounters />
         </div>
-        <nav className="desktop-nav" id="site-nav" aria-label="Main menu">
+        <nav className="desktop-nav" id="site-nav" aria-label={t.layout.mainMenu}>
           <ul className="container nav-list">
             {main.map((c) => (
               <CategoryItem key={c.id} c={c} />
             ))}
             <li className="nav-item">
               <Link className="nav-link" href="/catalog?sale=1">
-                Outlet
+                {t.layout.outlet}
               </Link>
               <div className="mega-menu">
                 <div className="container mega-inner">
@@ -60,7 +63,7 @@ export async function Header() {
                     ))}
                   </div>
                   <Link className="mega-image" href="/catalog?sale=1" tabIndex={-1}>
-                    <Image src="/img/gr/tr_img_1_73.jpg" alt="Outlet" width={480} height={240} sizes="480px" />
+                    <Image src="/img/gr/tr_img_1_73.webp" alt={t.layout.outlet} width={480} height={240} sizes="480px" />
                   </Link>
                 </div>
               </div>
@@ -75,6 +78,9 @@ export async function Header() {
             {rest.map((c) => (
               <CategoryItem key={c.id} c={c} />
             ))}
+            <li className="nav-item mobile-langs">
+              <LanguageLinks />
+            </li>
           </ul>
         </nav>
       </header>

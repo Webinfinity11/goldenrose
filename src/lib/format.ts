@@ -1,4 +1,5 @@
 import { notFound, permanentRedirect } from "next/navigation";
+import { localeHref, type Locale } from "@/i18n/config";
 import { slugify } from "./admin-shared";
 
 export const money = (n: number) => n.toFixed(2);
@@ -22,9 +23,9 @@ export const productUrl = (slug: string) => `/product/${encodeURIComponent(slug)
 export const categoryUrl = (slug: string) => `/category/${encodeURIComponent(slug)}`;
 
 /** Unknown slug: links made before slugs went Latin (Georgian) redirect to their transliteration; anything else is a 404. */
-export function oldSlugRedirect(slug: string, url: (slug: string) => string): never {
+export function oldSlugRedirect(slug: string, url: (slug: string) => string, locale: Locale): never {
   const latin = slugify(slug);
-  if (latin && latin !== slug) permanentRedirect(url(latin));
+  if (latin && latin !== slug) permanentRedirect(localeHref(locale, url(latin)));
   notFound();
 }
 

@@ -12,6 +12,10 @@ import {
 } from "drizzle-orm/pg-core";
 
 export type Spec = { label: string; value: string };
+/** Texts in the other storefront languages; the plain columns are Georgian. Empty fields fall back to Georgian. */
+export type Translations<F extends string> = Partial<Record<"en" | "ru", Partial<Record<F, string>>>>;
+export type ProductTranslations = Translations<"name" | "summary" | "description" | "country">;
+export type CategoryTranslations = Translations<"name" | "description">;
 export type OrderItem = {
   productId: number;
   /** Set when the product was bought in a specific variant (shade). */
@@ -34,6 +38,7 @@ export const categories = pgTable(
     description: text("description").notNull().default(""),
     image: text("image"),
     sortOrder: integer("sort_order").notNull().default(0),
+    i18n: jsonb("i18n").$type<CategoryTranslations>().notNull().default({}),
   },
   (t) => [index("categories_parent_idx").on(t.parentId)],
 );
@@ -63,6 +68,7 @@ export const products = pgTable(
     // Extra free-form specs shown after the structured ones.
     specs: jsonb("specs").$type<Spec[]>().notNull().default([]),
     images: jsonb("images").$type<string[]>().notNull().default([]),
+    i18n: jsonb("i18n").$type<ProductTranslations>().notNull().default({}),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

@@ -3,9 +3,12 @@
 import Image from "next/image";
 import { useEffect, useState, type MouseEvent } from "react";
 import { Icon } from "@/components/Icon";
+import { fill } from "@/i18n";
+import { useT } from "@/i18n/client";
 
 /** Product photos: hover magnifies under the cursor (desktop); click / the loupe button opens a full-screen view. */
 export function Gallery({ images, name, badge }: { images: string[]; name: string; badge: string | null }) {
+  const t = useT();
   const [active, setActive] = useState(0);
   const [zoom, setZoom] = useState<{ x: number; y: number } | null>(null);
   const [full, setFull] = useState(false);
@@ -54,7 +57,7 @@ export function Gallery({ images, name, badge }: { images: string[]; name: strin
             <button
               type="button"
               className="gallery-loupe"
-              aria-label="Zoom image"
+              aria-label={t.catalog.zoom}
               onClick={(e) => {
                 e.stopPropagation();
                 setFull(true);
@@ -64,13 +67,13 @@ export function Gallery({ images, name, badge }: { images: string[]; name: strin
             </button>
           </>
         ) : (
-          <span className="noimg">No image</span>
+          <span className="noimg">{t.catalog.noImage}</span>
         )}
       </div>
       {images.length > 1 && (
         <div className="thumbs">
           {images.map((s, i) => (
-            <button key={s} className={i === active ? "active" : ""} onClick={() => setActive(i)} aria-label={`Image ${i + 1}`}>
+            <button key={s} className={i === active ? "active" : ""} onClick={() => setActive(i)} aria-label={fill(t.catalog.image, { n: i + 1 })}>
               <Image src={s} alt="" fill sizes="76px" />
             </button>
           ))}
@@ -78,7 +81,7 @@ export function Gallery({ images, name, badge }: { images: string[]; name: strin
       )}
       {full && src && (
         <div className="lightbox" role="dialog" aria-modal="true" aria-label={name} onClick={() => setFull(false)}>
-          <button type="button" className="lightbox-close" aria-label="Close" onClick={() => setFull(false)}>
+          <button type="button" className="lightbox-close" aria-label={t.catalog.close} onClick={() => setFull(false)}>
             <Icon name="close" />
           </button>
           {images.length > 1 && (
@@ -86,7 +89,7 @@ export function Gallery({ images, name, badge }: { images: string[]; name: strin
               <button
                 type="button"
                 className="lightbox-nav prev"
-                aria-label="Previous"
+                aria-label={t.catalog.previous}
                 onClick={(e) => {
                   e.stopPropagation();
                   setActive((i) => (i - 1 + images.length) % images.length);
@@ -97,7 +100,7 @@ export function Gallery({ images, name, badge }: { images: string[]; name: strin
               <button
                 type="button"
                 className="lightbox-nav next"
-                aria-label="Next"
+                aria-label={t.catalog.next}
                 onClick={(e) => {
                   e.stopPropagation();
                   setActive((i) => (i + 1) % images.length);

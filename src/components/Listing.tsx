@@ -1,10 +1,12 @@
-import Link from "next/link";
+import Link from "@/components/Link";
 import { AttrSelect } from "@/components/AttrSelect";
 import { Icon } from "@/components/Icon";
 import { ProductGrid } from "@/components/ProductCard";
 import { PriceFilter } from "@/components/PriceFilter";
 import { SidebarTree, type SideNode } from "@/components/SidebarTree";
 import { SortSelect } from "@/components/SortSelect";
+import { fill } from "@/i18n";
+import { getT } from "@/i18n/server";
 import { getCategoryTree, getFilterOptions, getProducts, type CategoryNode, type ProductQuery, type SortKey } from "@/lib/data";
 
 export type ListingParams = {
@@ -55,10 +57,11 @@ export async function Listing({
   category?: { id: number; descendantIds: number[] };
 }) {
   const query = parseListing(sp);
-  const [tree, result, options] = await Promise.all([
+  const [tree, result, options, t] = await Promise.all([
     getCategoryTree(),
     getProducts({ ...query, categoryIds: category?.descendantIds }),
     getFilterOptions(),
+    getT(),
   ]);
   const { items, total, pages } = result;
   const page = Math.min(query.page!, pages);
@@ -70,10 +73,10 @@ export async function Listing({
         <div className="toolbar">
           <div className="chips">
             <Link className={query.sale ? "chip selected" : "chip"} href={href(base, sp, { sale: query.sale ? "" : "1", page: "" })}>
-              <Icon name="tag" /> On Sale
+              <Icon name="tag" /> {t.catalog.onSale}
             </Link>
             <Link className={query.inStock ? "chip selected" : "chip"} href={href(base, sp, { stock: query.inStock ? "" : "1", page: "" })}>
-              In Stock
+              {t.catalog.inStockFilter}
             </Link>
             {query.q && (
               <Link className="chip selected" href={href(base, sp, { q: "", page: "" })}>
@@ -81,12 +84,12 @@ export async function Listing({
               </Link>
             )}
           </div>
-          {options.brands.length > 0 && <AttrSelect name="brand" label="Brand" value={query.brand} options={options.brands} />}
+          {options.brands.length > 0 && <AttrSelect name="brand" label={t.catalog.brand} allLabel={fill(t.catalog.attrAll, { label: t.catalog.brand })} value={query.brand} options={options.brands} />}
           {options.collections.length > 0 && (
-            <AttrSelect name="collection" label="Collection" value={query.collection} options={options.collections} />
+            <AttrSelect name="collection" label={t.catalog.collection} allLabel={fill(t.catalog.attrAll, { label: t.catalog.collection })} value={query.collection} options={options.collections} />
           )}
           <PriceFilter key={`${query.minPrice}-${query.maxPrice}`} min={query.minPrice} max={query.maxPrice} />
-          <span className="resultcount">{total} {total === 1 ? "product" : "products"}</span>
+          <span className="resultcount">{fill(total === 1 ? t.catalog.productCountOne : t.catalog.productCount, { n: total })}</span>
           <SortSelect value={query.sort!} />
         </div>
         {items.length ? (
@@ -95,15 +98,15 @@ export async function Listing({
           <div className="product-grid">
             <div className="empty">
               <Icon name="search" />
-              <h3>No products found</h3>
-              <p>Try a different search or clear the filters.</p>
+              <h3>{t.catalog.noResults}</h3>
+              <p>{t.catalog.noResultsText}</p>
               <Link className="primary" href={base}>
-                Clear Filters
+                {t.catalog.clearFilters}
               </Link>
             </div>
           </div>
         )}
-        {pages > 1 && <Pagination page={page} pages={pages} link={(n) => href(base, sp, { page: String(n) })} />}
+        {pages > 1 && <Pagination labels={t.catalog} page={page} pages={pages} link={(n) => href(base, sp, { page: String(n) })} />}
       </div>
     </div>
   );
@@ -121,12 +124,12 @@ function Sidebar({ tree, activeId }: { tree: CategoryNode[]; activeId?: number }
   return <SidebarTree tree={tree.map(strip)} activeId={activeId} />;
 }
 
-function Pagination({ page, pages, link }: { page: number; pages: number; link: (n: number) => string }) {
+function Pagination({ labels, page, pages, link }: { labels: { pagination: string; prevPage: string; nextPage: string }; page: number; pages: number; link: (n: number) => string }) {
   const nums = [...new Set([1, page - 1, page, page + 1, pages])].filter((n) => n >= 1 && n <= pages).sort((a, b) => a - b);
   return (
-    <nav className="pagination" aria-label="Pagination">
+    <nav className="pagination" aria-label={labels.pagination}>
       {page > 1 && (
-        <Link href={link(page - 1)} aria-label="Previous page">
+        <Link href={link(page - 1)} aria-label={labels.prevPage}>
           <Icon name="left" />
         </Link>
       )}
@@ -143,7 +146,7 @@ function Pagination({ page, pages, link }: { page: number; pages: number; link: 
         </span>
       ))}
       {page < pages && (
-        <Link href={link(page + 1)} aria-label="Next page">
+        <Link href={link(page + 1)} aria-label={labels.nextPage}>
           <Icon name="right" />
         </Link>
       )}

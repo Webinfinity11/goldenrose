@@ -1,15 +1,16 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { WhatsAppIcon } from "@/components/gr/GrIcon";
 import { getCategoryTree } from "@/lib/data";
 import { categoryUrl } from "@/lib/format";
 import { getContent } from "@/lib/content";
+import { getT } from "@/i18n/server";
 import { BackToTop } from "./MobileMenu";
 import { NewsletterForm } from "./Newsletter";
 
 export async function Footer() {
   "use cache";
-  const [tree, { footer, site }] = await Promise.all([getCategoryTree(), getContent()]);
+  const [tree, { footer, site }, { layout: t }] = await Promise.all([getCategoryTree(), getContent(), getT()]);
   return (
     <>
       <footer className="site-footer">
@@ -36,17 +37,17 @@ export async function Footer() {
             ))}
           </div>
           <div className="footer-column">
-            <h3>Shop</h3>
-            <Link href="/catalog?sort=new">New Arrivals</Link>
-            <Link href="/catalog?sale=1">Campaigns</Link>
-            <Link href="/favorites">My Favorites</Link>
-            <Link href="/cart">My Cart</Link>
+            <h3>{t.shop}</h3>
+            <Link href="/catalog?sort=new">{t.newArrivals}</Link>
+            <Link href="/catalog?sale=1">{t.campaigns}</Link>
+            <Link href="/favorites">{t.myFavorites}</Link>
+            <Link href="/cart">{t.myCart}</Link>
           </div>
           <div className="footer-column contact">
             <h3>{footer.contactTitle}</h3>
             <p>{site.address}</p>
             <a href={`tel:${site.phone}`}>
-              Customer Service
+              {t.customerService}
               <br />
               <strong>{site.phoneLabel}</strong>
             </a>
@@ -55,7 +56,7 @@ export async function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <Image src="/img/gr/footer-bank.svg" width={289} height={30} alt="Secure payment methods" />
+          <Image src="/img/gr/footer-bank.svg" width={289} height={30} alt={t.paymentMethods} />
           <p>{footer.copyright}</p>
         </div>
       </footer>
@@ -65,7 +66,7 @@ export async function Footer() {
           href={`https://wa.me/${site.whatsapp.replace(/\D/g, "")}`}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="WhatsApp support"
+          aria-label={t.whatsapp}
         >
           <WhatsAppIcon />
         </a>

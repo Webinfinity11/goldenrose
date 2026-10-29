@@ -2,17 +2,21 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import { eq } from "drizzle-orm";
 import { db, settings } from "@/db";
-import { contentDefaults, HOME_CATEGORIES_KEY, type Content, type ContentKey } from "@/lib/content-schema";
+import { contentDefaults, contentRowKey, localizedDefaults, HOME_CATEGORIES_KEY, type Content, type ContentKey } from "@/lib/content-schema";
+import type { Locale } from "@/i18n/config";
+import { getLocale } from "@/i18n/server";
 
-/** Site content with admin edits layered over the defaults. */
-export async function getContent(): Promise<Content> {
+/** Site content of a language (the request's when not given) with admin edits layered over the defaults. */
+export async function getContent(locale?: Locale): Promise<Content> {
   "use cache";
   cacheLife("hours");
   cacheTag("content");
-  const rows = await db.select().from(settings);
-  const merged = structuredClone(contentDefaults) as Record<string, Record<string, unknown>>;
-  for (const row of rows) {
-    if (row.key in merged) merged[row.key] = { ...merged[row.key], ...row.value };
+  const lang = locale ?? (await getLocale());
+  const rows = new Map((await db.select().from(settings)).map((r) => [r.key, r.value]));
+  const merged = structuredClone(localizedDefaults[lang]) as Record<string, Record<string, unknown>>;
+  for (const key of Object.keys(merged) as ContentKey[]) {
+    const saved = rows.get(contentRowKey(key, lang));
+    if (saved) merged[key] = { ...merged[key], ...saved };
   }
   return merged as unknown as Content;
 }

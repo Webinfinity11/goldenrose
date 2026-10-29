@@ -1,23 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { useState } from "react";
 import { Icon } from "@/components/Icon";
+import { useT } from "@/i18n/client";
 import { categoryUrl } from "@/lib/format";
 
 export type SideNode = { id: number; name: string; slug: string; image: string | null; count: number; children: SideNode[] };
 
 /** Category sidebar with collapsible branches; the branch holding the current category starts open. */
 export function SidebarTree({ tree, activeId }: { tree: SideNode[]; activeId?: number }) {
+  const t = useT();
   const contains = (n: SideNode): boolean => n.id === activeId || n.children.some(contains);
   return (
-    <aside className="sidebar" aria-label="Categories">
+    <aside className="sidebar" aria-label={t.catalog.categories}>
       <div className="side-head">
-        <Icon name="grid" /> Categories
+        <Icon name="grid" /> {t.catalog.categories}
       </div>
       <Link className={activeId ? "side-all" : "side-all active"} href="/catalog">
-        All Products
+        {t.catalog.allProducts}
       </Link>
       <ul className="side-tree">
         {tree.map((n) => (
@@ -41,6 +43,7 @@ function Branch({
   startOpen: boolean;
   contains: (n: SideNode) => boolean;
 }) {
+  const t = useT();
   const [open, setOpen] = useState(startOpen);
   const kids = node.children;
   const active = node.id === activeId;
@@ -59,7 +62,7 @@ function Branch({
             type="button"
             className="side-toggle"
             aria-expanded={open}
-            aria-label={`${node.name}: ${open ? "Collapse" : "Expand subcategories"}`}
+            aria-label={`${node.name}: ${open ? t.catalog.collapse : t.catalog.expand}`}
             onClick={() => setOpen((o) => !o)}
           >
             <Icon name="down" />

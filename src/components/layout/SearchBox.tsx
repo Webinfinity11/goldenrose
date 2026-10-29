@@ -1,16 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "@/components/Link";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { GrIcon } from "@/components/gr/GrIcon";
+import { fill } from "@/i18n";
+import { useLocaleRouter, useT } from "@/i18n/client";
 import { finalPrice, gel, productUrl } from "@/lib/format";
 import type { ProductCard } from "@/lib/data";
 
 export function SearchBox({ placeholder }: { placeholder: string }) {
-  const router = useRouter();
+  const router = useLocaleRouter();
+  const { layout: t, locale } = useT();
   const [q, setQ] = useState("");
   const [results, setResults] = useState<ProductCard[]>([]);
   const [total, setTotal] = useState(0);
@@ -45,7 +47,7 @@ export function SearchBox({ placeholder }: { placeholder: string }) {
     const ctrl = new AbortController();
     const t = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(term)}`, { signal: ctrl.signal });
+        const res = await fetch(`/api/search?q=${encodeURIComponent(term)}&lang=${locale}`, { signal: ctrl.signal });
         const data = await res.json();
         setResults(data.items);
         setTotal(data.total);
@@ -56,7 +58,7 @@ export function SearchBox({ placeholder }: { placeholder: string }) {
       clearTimeout(t);
       ctrl.abort();
     };
-  }, [q]);
+  }, [q, locale]);
 
   const go = () => {
     setOpen(false);
@@ -79,18 +81,18 @@ export function SearchBox({ placeholder }: { placeholder: string }) {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         onFocus={() => results.length && setOpen(true)}
-        aria-label="Search products"
+        aria-label={t.searchProducts}
         placeholder={placeholder}
         autoComplete="off"
       />
-      <button type="submit" aria-label="Search">
+      <button type="submit" aria-label={t.search}>
         <GrIcon name="search" size={18} />
-        <span>Search</span>
+        <span>{t.search}</span>
       </button>
       {open && q.trim().length >= 2 && (
         <div className="suggest">
           {results.length === 0 ? (
-            <p className="suggest-empty">No results for “{q}”</p>
+            <p className="suggest-empty">{fill(t.noResults, { q })}</p>
           ) : (
             <>
               {results.map((p) => (
@@ -106,7 +108,7 @@ export function SearchBox({ placeholder }: { placeholder: string }) {
                 </Link>
               ))}
               <button type="submit" className="suggest-all">
-                All results ({total}) <Icon name="arrow" />
+                {fill(t.allResults, { n: total })} <Icon name="arrow" />
               </button>
             </>
           )}

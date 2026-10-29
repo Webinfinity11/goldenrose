@@ -1,22 +1,24 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useT } from "@/i18n/client";
 
 const options = [
-  ["default", "Recommended"],
-  ["new", "Newest"],
-  ["price-asc", "Price: Low to High"],
-  ["price-desc", "Price: High to Low"],
-  ["name", "Name: A–Z"],
+  ["default", "sortDefault"],
+  ["new", "sortNew"],
+  ["price-asc", "sortPriceAsc"],
+  ["price-desc", "sortPriceDesc"],
+  ["name", "sortName"],
 ] as const;
 
 export function SortSelect({ value }: { value: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const t = useT();
   return (
     <label className="sort">
-      Sort by:
+      {t.catalog.sortBy}
       <select
         value={value}
         onChange={(e) => {
@@ -28,9 +30,9 @@ export function SortSelect({ value }: { value: string }) {
           router.push(qs ? `${pathname}?${qs}` : pathname);
         }}
       >
-        {options.map(([v, label]) => (
+        {options.map(([v, key]) => (
           <option key={v} value={v}>
-            {label}
+            {t.catalog[key]}
           </option>
         ))}
       </select>

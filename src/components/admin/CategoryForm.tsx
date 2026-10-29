@@ -8,6 +8,7 @@ import { deleteCategory, saveCategory } from "@/lib/actions/admin";
 import { slugify } from "@/lib/admin-shared";
 import { Button, Card, Field, inputCls } from "./ui";
 import { ImageUploader } from "./ImageUploader";
+import { TranslationsEditor, type TranslationValue } from "./TranslationsEditor";
 
 type Cat = { id: number; name: string; parentId: number | null };
 
@@ -21,6 +22,7 @@ export function CategoryForm({ category, all, defaultParent }: { category: Categ
   const [description, setDescription] = useState(category?.description ?? "");
   const [image, setImage] = useState<string[]>(category?.image ? [category.image] : []);
   const [sortOrder, setSortOrder] = useState(String(category?.sortOrder ?? 0));
+  const [i18n, setI18n] = useState<TranslationValue>(category?.i18n ?? {});
 
   // A category can't become a child of itself or of its own descendants.
   const branch = new Set<number>(category ? [category.id] : []);
@@ -52,6 +54,7 @@ export function CategoryForm({ category, all, defaultParent }: { category: Categ
         description,
         image: image[0] ?? null,
         sortOrder,
+        i18n,
       });
       if (!res.ok) return setMessage({ ok: false, text: res.error });
       setMessage({ ok: true, text: "შენახულია ✓" });
@@ -76,46 +79,58 @@ export function CategoryForm({ category, all, defaultParent }: { category: Categ
         save();
       }}
     >
-      <Card>
-        <div className="grid gap-4">
-          <Field label="დასახელება *">
-            <input
-              value={name}
-              required
-              onChange={(e) => {
-                setName(e.target.value);
-                if (!category) setSlug(slugify(e.target.value));
-              }}
-              className={inputCls}
-            />
-          </Field>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <Field label="ბმული (slug)">
-              <input value={slug} onChange={(e) => setSlug(e.target.value)} className={inputCls} />
+      <div className="grid gap-5">
+        <Card>
+          <div className="grid gap-4">
+            <Field label="დასახელება *">
+              <input
+                value={name}
+                required
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (!category) setSlug(slugify(e.target.value));
+                }}
+                className={inputCls}
+              />
             </Field>
-            <Field label="მშობელი კატეგორია">
-              <select value={parentId ?? ""} onChange={(e) => setParentId(Number(e.target.value) || null)} className={inputCls}>
-                <option value="">- მთავარი კატეგორია -</option>
-                {options.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field label="ბმული (slug)">
+                <input value={slug} onChange={(e) => setSlug(e.target.value)} className={inputCls} />
+              </Field>
+              <Field label="მშობელი კატეგორია">
+                <select value={parentId ?? ""} onChange={(e) => setParentId(Number(e.target.value) || null)} className={inputCls}>
+                  <option value="">- მთავარი კატეგორია -</option>
+                  {options.map((o) => (
+                    <option key={o.id} value={o.id}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            </div>
+            <Field label="აღწერა">
+              <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className={inputCls} />
             </Field>
+            <Field label="რიგითობა" hint="ნაკლები რიცხვი = უფრო მაღლა">
+              <input type="number" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className={`${inputCls} max-w-32`} />
+            </Field>
+            <div>
+              <span className="block text-sm font-semibold mb-1.5">სურათი</span>
+              <ImageUploader value={image} onChange={(urls) => setImage(urls.slice(-1))} max={1} />
+            </div>
           </div>
-          <Field label="აღწერა">
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className={inputCls} />
-          </Field>
-          <Field label="რიგითობა" hint="ნაკლები რიცხვი = უფრო მაღლა">
-            <input type="number" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className={`${inputCls} max-w-32`} />
-          </Field>
-          <div>
-            <span className="block text-sm font-semibold mb-1.5">სურათი</span>
-            <ImageUploader value={image} onChange={(urls) => setImage(urls.slice(-1))} max={1} />
-          </div>
-        </div>
-      </Card>
+        </Card>
+        <Card title="თარგმანები (English / Русский)">
+          <TranslationsEditor
+            value={i18n}
+            onChange={setI18n}
+            fields={[
+              { name: "name", label: "დასახელება" },
+              { name: "description", label: "აღწერა", long: true },
+            ]}
+          />
+        </Card>
+      </div>
       <Card>
         <div className="grid gap-3">
           <Button disabled={pending}>{pending ? "ინახება…" : "შენახვა"}</Button>
